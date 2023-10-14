@@ -1,0 +1,99 @@
+﻿<UserControl x:Class="SpiritBoard.FighterTab"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:SpiritBoard"
+                xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             mc:Ignorable="d" Width="894.893" Height="478">
+    <Grid Background="#70FFFFFF">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Label x:Name="Fighter_Name" Content="Fighter #99" HorizontalAlignment="Center" Margin="10,10,135.2,0" VerticalAlignment="Top" FontSize="24" Width="774" HorizontalContentAlignment="Center"/>
+        <Image x:Name="Fighter_Attr_Image" HorizontalAlignment="Left" Height="40" Margin="268,12,0,0" VerticalAlignment="Top" Width="40"/>
+        <Image x:Name="Fighter_Fighter_Image" HorizontalAlignment="Left" Height="40" Margin="488,12,0,0" VerticalAlignment="Top" Width="40"/>
+        <ComboBox x:Name="Fighter_ID" Margin="285,88,509.8,0" VerticalAlignment="Top" Width="130" SelectedValue="{Binding FilterService.TripLengthFrom, Mode=OneWayToSource}"/>
+        <Label x:Name="Fighter_ID_Label" Content="Fighter ID" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="290,62,514.8,0" VerticalAlignment="Top" Width="120"/>
+        <ComboBox x:Name="Fighter_Color_Mii" Margin="424,88,413.2,0" VerticalAlignment="Top" Width="87" SelectedValue="{Binding FilterService.TripLengthFrom, Mode=OneWayToSource}"/>
+        <xctk:IntegerUpDown x:Name="Fighter_Color" Value="0" Increment="1" Maximum="255" Minimum="0" HorizontalAlignment="Right" Height="22" Margin="0,88,413.6,0" VerticalAlignment="Top" Width="88"/>
+        <Label x:Name="Fighter_Color_Label" Content="Fighter Color" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="423,62,413.8,0" VerticalAlignment="Top" Width="88"/>
+        <CheckBox x:Name="Fighter_Ignore_Num_Col" Content="Force Color" HorizontalAlignment="Left" Margin="518,89,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center" Height="22"/>
+        <ComboBox x:Name="Fighter_Spawn_Type" Margin="283,180,507,0" VerticalAlignment="Top" Width="130" SelectedValue="{Binding FilterService.TripLengthFrom, Mode=OneWayToSource}"/>
+        <Label x:Name="Fighter_Spawn_Type_Label" Content="Spawn Type" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="288,154,512,0" VerticalAlignment="Top" Width="120"/>
+        <CheckBox x:Name="Fighter_First_Appear" Content="Appear First" HorizontalAlignment="Left" Margin="424,180,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center" Height="22"/>
+        <xctk:IntegerUpDown x:Name="Fighter_Spawn_Count" Value="0" Increment="1" Maximum="9" Minimum="0" HorizontalAlignment="Right" Height="22" Margin="0,180,308,0" VerticalAlignment="Top" Width="88"/>
+        <Label x:Name="Fighter_Spawn_Count_Label" Content="Spawn After # KOs" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="505,154,291,0" VerticalAlignment="Top" Width="124"/>
+        <xctk:IntegerUpDown x:Name="Fighter_Spawn_Time" Value="0" Increment="1" Maximum="300" Minimum="0" HorizontalAlignment="Right" Height="22" Margin="0,180,661,0" VerticalAlignment="Top" Width="88"/>
+        <Label x:Name="Fighter_Spawn_Time_Label" Content="Spawn At ### Sec" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="156,154,644,0" VerticalAlignment="Top" Width="124"/>
+        <xctk:IntegerUpDown x:Name="Fighter_Stock" Value="0" Increment="1" Maximum="99" Minimum="0" HorizontalAlignment="Right" Height="22" Margin="0,227,609,0" VerticalAlignment="Top" Width="88"/>
+        <Label x:Name="Fighter_Stock_Label" Content="Stock" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="227,202,609,0" VerticalAlignment="Top" Width="88"/>
+        <xctk:IntegerUpDown x:Name="Fighter_HP" Value="1" Increment="1" Maximum="900" Minimum="1" HorizontalAlignment="Right" Height="22" Margin="0,226,293,0" VerticalAlignment="Top" Width="88"/>
+        <Label x:Name="Fighter_HP_Label" Content="Start HP" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="543,200,293,0" VerticalAlignment="Top" Width="88"/>
+        <xctk:IntegerUpDown x:Name="Fighter_Damage" Value="0" Increment="1" Maximum="200" Minimum="0" HorizontalAlignment="Right" Height="22" Margin="0,227,716,0" VerticalAlignment="Top" Width="88"/>
+        <Label x:Name="Fighter_Damage_Label" Content="Start Damage" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="120,202,716,0" VerticalAlignment="Top" Width="88"/>
+        <CheckBox x:Name="Fighter_Mob" Content="Is Mob" HorizontalAlignment="Left" Margin="462,227,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center" Height="22"/>
+        <Label x:Name="Fighter_Properties" Content="Fighter Properties" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="10,269,136,0" VerticalAlignment="Top" Width="774" FontSize="14"/>
+        <Label x:Name="Fighter_Spawn" Content="Spawn Properties" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="10,125,136,0" VerticalAlignment="Top" Width="774" FontSize="14"/>
+
+        <xctk:IntegerUpDown x:Name="Fighter_CPU_Level" Value="1" Increment="1" Maximum="500" Minimum="1" HorizontalAlignment="Right" Height="22" Margin="0,373,238.8,0" VerticalAlignment="Top" Width="88"/>
+        <Label x:Name="Fighter_CPU_Level_Label" Content="CPU Level" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="601,347,235.8,0" VerticalAlignment="Top" Width="88"/>
+        <ComboBox x:Name="Fighter_CPU_Type" Margin="67,325,727.8,0" VerticalAlignment="Top" Width="130" SelectedValue="{Binding FilterService.TripLengthFrom, Mode=OneWayToSource}"/>
+        <Label x:Name="Fighter_CPU_Type_Label" Content="CPU Type" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="67,298,727.8,0" VerticalAlignment="Top" Width="130"/>
+        <ComboBox x:Name="Fighter_CPU_Subtype" Margin="227,325,567.8,0" VerticalAlignment="Top" Width="130" SelectedValue="{Binding FilterService.TripLengthFrom, Mode=OneWayToSource}"/>
+        <Label x:Name="Fighter_CPU_Subtype_Label" Content="CPU Sub Type" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="228,298,566.8,0" VerticalAlignment="Top" Width="130"/>
+        <CheckBox x:Name="Fighter_Charge_FS" Content="Can Charge FS" HorizontalAlignment="Left" Margin="594,324,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center" Height="22"/>
+        <CheckBox x:Name="Fighter_Can_Use_Item" Content="Can Use Items" HorizontalAlignment="Left" Margin="378,324,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center" Height="22"/>
+        <CheckBox x:Name="Fighter_Can_Drop_Item" Content="Can Drop Items" HorizontalAlignment="Left" Margin="483,325,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center" Height="22"/>
+        <ComboBox x:Name="Fighter_CPU_Attribute" Margin="65,373,769,0" VerticalAlignment="Top" Width="90" SelectedValue="{Binding FilterService.TripLengthFrom, Mode=OneWayToSource}"/>
+        <Label x:Name="Fighter_CPU_Attribute_Label" Content="Attribute" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="63,347,769,0" VerticalAlignment="Top" Width="88"/>
+        <xctk:IntegerUpDown x:Name="Fighter_CPU_Attack" Value="0" Increment="1" Maximum="25000" Minimum="0" HorizontalAlignment="Right" Height="22" Margin="0,373,664,0" VerticalAlignment="Top" Width="88"/>
+        <Label x:Name="Fighter_CPU_Attack_Label" Content="Attack" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="168,347,664,0" VerticalAlignment="Top" Width="88"/>
+        <xctk:IntegerUpDown x:Name="Fighter_CPU_Defense" Value="0" Increment="1" Maximum="25000" Minimum="0" HorizontalAlignment="Right" Height="22" Margin="0,373,560,0" VerticalAlignment="Top" Width="88"/>
+        <Label x:Name="Fighter_CPU_Defense_Label" Content="Defense" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="272,347,560,0" VerticalAlignment="Top" Width="88"/>
+        <xctk:DecimalUpDown x:Name="Fighter_CPU_Scale" Value="1" Increment="0.1" Maximum="10" Minimum="0.01" HorizontalAlignment="Right" Height="22" Margin="0,373,453,0" VerticalAlignment="Top" Width="88"/>
+        <Label x:Name="Fighter_CPU_Scale_Label" Content="Scale" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="379,347,453,0" VerticalAlignment="Top" Width="88"/>
+        <xctk:DecimalUpDown x:Name="Fighter_Fly_Rate" Value="1" Increment="0.1" Maximum="10" Minimum="0.01" HorizontalAlignment="Right" Height="22" Margin="0,373,349,0" VerticalAlignment="Top" Width="88"/>
+        <Label x:Name="Fighter_Fly_Rate_Label" Content="Fly Rate" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="483,347,349,0" VerticalAlignment="Top" Width="88"/>
+        <ComboBox x:Name="Fighter_CPU_Spirit" Margin="586,421,228.8,0" VerticalAlignment="Top" Width="110" SelectedValue="{Binding FilterService.TripLengthFrom, Mode=OneWayToSource}"/>
+        <Label x:Name="Fighter_CPU_Spirit_Label" Content="Displayed Spirit" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="586,395,228.8,0" VerticalAlignment="Top" Width="110"/>
+        <ComboBox x:Name="Fighter_CPU_Ability_1" Margin="63,421,743,0" VerticalAlignment="Top" Width="110" SelectedValue="{Binding FilterService.TripLengthFrom, Mode=OneWayToSource}"/>
+        <Label x:Name="Fighter_CPU_Ability_1_Label" Content="Ability 1" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="63,395,743,0" VerticalAlignment="Top" Width="114"/>
+        <ComboBox x:Name="Fighter_CPU_Ability_2" Margin="194,421,612,0" VerticalAlignment="Top" Width="110" SelectedValue="{Binding FilterService.TripLengthFrom, Mode=OneWayToSource}"/>
+        <Label x:Name="Fighter_CPU_Ability_2_Label" Content="Ability 2" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="194,395,612,0" VerticalAlignment="Top" Width="114"/>
+        <ComboBox x:Name="Fighter_CPU_Ability_3" Margin="325,421,481,0" VerticalAlignment="Top" Width="110" SelectedValue="{Binding FilterService.TripLengthFrom, Mode=OneWayToSource}"/>
+        <Label x:Name="Fighter_CPU_Ability_3_Label" Content="Ability 3" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="325,395,481,0" VerticalAlignment="Top" Width="114"/>
+        <ComboBox x:Name="Fighter_CPU_Ability_Personal" Margin="460,421,354.8,0" VerticalAlignment="Top" Width="110" SelectedValue="{Binding FilterService.TripLengthFrom, Mode=OneWayToSource}"/>
+        <Label x:Name="Fighter_CPU_Ability_Personal_Label" Content="Personal Ability" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="458,395,352.8,0" VerticalAlignment="Top" Width="114"/>
+        <ComboBox x:Name="Fighter_CPU_Subrule" Margin="331,226,483,0" VerticalAlignment="Top" Width="110" SelectedValue="{Binding FilterService.TripLengthFrom, Mode=OneWayToSource}"/>
+        <Label x:Name="Fighter_CPU_Subrule_Label" Content="Sub Rule" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="331,202,485.8,0" VerticalAlignment="Top" Width="108" Height="24"/>
+
+
+        <Label x:Name="Fighter_Mii_Label" Content="Mii Data" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="719,57,80.2,0" VerticalAlignment="Top" Width="120" FontSize="14"/>
+        <ComboBox x:Name="Fighter_Mii_Hat_ID" Margin="713,111,76.2,0" VerticalAlignment="Top" Width="130" SelectedValue="{Binding FilterService.TripLengthFrom, Mode=OneWayToSource}"/>
+        <Label x:Name="Fighter_Mii_Hat_ID_Label" Content="Mii Hat" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="714,85,77.2,0" VerticalAlignment="Top" Width="128"/>
+        <ComboBox x:Name="Fighter_Mii_Outfit_ID" Margin="714,159,75.2,0" VerticalAlignment="Top" Width="130" SelectedValue="{Binding FilterService.TripLengthFrom, Mode=OneWayToSource}"/>
+        <Label x:Name="Fighter_Mii_Outfit_ID_Label" Content="Mii Outfit" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="714,133,77.2,0" VerticalAlignment="Top" Width="128"/>
+        <ComboBox x:Name="Fighter_Mii_Color_ID" Margin="714,207,75,0" VerticalAlignment="Top" Width="130" SelectedValue="{Binding FilterService.TripLengthFrom, Mode=OneWayToSource}"/>
+        <Label x:Name="Fighter_Mii_Color_Label" Content="Mii Color" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="714,181,75,0" VerticalAlignment="Top" Width="131"/>
+        <ComboBox x:Name="Fighter_Mii_Voice_ID" Margin="714,255,75,0" VerticalAlignment="Top" Width="130" SelectedValue="{Binding FilterService.TripLengthFrom, Mode=OneWayToSource}"/>
+        <Label x:Name="Fighter_Mii_Voice_Label" Content="Mii Voice" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="714,229,75,0" VerticalAlignment="Top" Width="131"/>
+        <Label x:Name="Fighter_Mii_Specials_Label" Content="Mii Specials" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="714,277,75,0" VerticalAlignment="Top" Width="131"/>
+        <ComboBox x:Name="Fighter_Mii_NSpec" Margin="714,303,75,0" VerticalAlignment="Top" Width="130" SelectedValue="{Binding FilterService.TripLengthFrom, Mode=OneWayToSource}"/>
+        <ComboBox x:Name="Fighter_Mii_SSpec" Margin="714,325,75,0" VerticalAlignment="Top" Width="130" SelectedValue="{Binding FilterService.TripLengthFrom, Mode=OneWayToSource}"/>
+        <ComboBox x:Name="Fighter_Mii_USpec" Margin="714,347,75,0" VerticalAlignment="Top" Width="130" SelectedValue="{Binding FilterService.TripLengthFrom, Mode=OneWayToSource}"/>
+        <ComboBox x:Name="Fighter_Mii_DSpec" Margin="714,369,75,0" VerticalAlignment="Top" Width="130" SelectedValue="{Binding FilterService.TripLengthFrom, Mode=OneWayToSource}"/>
+        <Label x:Name="Spirit_Ability_1_Desc" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Margin="67,443,0,0" VerticalAlignment="Top" Width="110" FontSize="6" Height="34">
+            <TextBlock x:Name="Spirit_Ability_1_Desc_Block" TextWrapping="WrapWithOverflow">Description</TextBlock>
+        </Label>
+        <Label x:Name="Spirit_Ability_2_Desc" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Margin="198,444,0,0" VerticalAlignment="Top" Width="110" FontSize="6" Height="34">
+            <TextBlock x:Name="Spirit_Ability_2_Desc_Block" TextWrapping="WrapWithOverflow">Description</TextBlock>
+        </Label>
+        <Label x:Name="Spirit_Ability_3_Desc" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Margin="329,444,0,0" VerticalAlignment="Top" Width="110" FontSize="6" Height="34">
+            <TextBlock x:Name="Spirit_Ability_3_Desc_Block" TextWrapping="WrapWithOverflow">Description</TextBlock>
+        </Label>
+        <Label x:Name="Spirit_Ability_P_Desc" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Margin="460,444,0,0" VerticalAlignment="Top" Width="110" FontSize="6" Height="34">
+            <TextBlock x:Name="Spirit_Ability_P_Desc_Block" TextWrapping="WrapWithOverflow">Description</TextBlock>
+        </Label>
+    </Grid>
+</UserControl>

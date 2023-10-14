@@ -1,0 +1,883 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:dd="urn:gong-wpf-dragdrop"
+        xmlns:local="clr-namespace:SpiritBoard"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        xmlns:Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2" x:Class="SpiritBoard.MainWindow"
+        mc:Ignorable="d"
+        Title="Spirit Board" Height="628.4" Width="1100" ResizeMode="CanMinimize">
+    <Window.Resources>
+        <SolidColorBrush x:Key="ToolBarHorizontalBackground" Color="#FFEEF5FD"/>
+        <SolidColorBrush x:Key="ToolBarToggleButtonVerticalBackground" Color="#FFEEF5FD"/>
+        <SolidColorBrush x:Key="ToolBarButtonHover" Color="#210080FF"/>
+        <SolidColorBrush x:Key="ToolBarGripper" Color="#FF6D6D6D"/>
+        <Style x:Key="ToolBarVerticalOverflowButtonStyle" TargetType="{x:Type ToggleButton}">
+            <Setter Property="Background" Value="{StaticResource ToolBarToggleButtonVerticalBackground}"/>
+            <Setter Property="MinHeight" Value="0"/>
+            <Setter Property="MinWidth" Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ToggleButton}">
+                        <Border x:Name="Bd" Background="{TemplateBinding Background}" CornerRadius="0,0,3,3" SnapsToDevicePixels="true">
+                            <Canvas HorizontalAlignment="Right" Height="6" Margin="2,7,2,2" SnapsToDevicePixels="true" VerticalAlignment="Bottom" Width="7">
+                                <Path Data="M 1.5 1 L 1.5 6" Stroke="White"/>
+                                <Path Data="M 0.5 0 L 0.5 5" Stroke="{TemplateBinding Foreground}"/>
+                                <Path Data="M 3.5 0.5 L 7 3.5 L 4 6.5 Z" Fill="White"/>
+                                <Path Data="M 3 -0.5 L 6 2.5 L 3 5.5 Z" Fill="{TemplateBinding Foreground}"/>
+                            </Canvas>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter Property="Background" TargetName="Bd" Value="{StaticResource ToolBarButtonHover}"/>
+                            </Trigger>
+                            <Trigger Property="IsKeyboardFocused" Value="true">
+                                <Setter Property="Background" TargetName="Bd" Value="{StaticResource ToolBarButtonHover}"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter Property="Foreground" Value="{StaticResource ToolBarGripper}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Source={x:Static SystemParameters.HighContrast}}" Value="true">
+                    <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.ControlBrushKey}}"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <SolidColorBrush x:Key="ToolBarVerticalBackground" Color="#FFEEF5FD"/>
+        <SolidColorBrush x:Key="ToolBarToggleButtonHorizontalBackground" Color="#FFEEF5FD"/>
+        <Style x:Key="ToolBarHorizontalOverflowButtonStyle" TargetType="{x:Type ToggleButton}">
+            <Setter Property="Background" Value="{StaticResource ToolBarToggleButtonHorizontalBackground}"/>
+            <Setter Property="MinHeight" Value="0"/>
+            <Setter Property="MinWidth" Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ToggleButton}">
+                        <Border x:Name="Bd" Background="{TemplateBinding Background}" CornerRadius="0,3,3,0" SnapsToDevicePixels="true">
+                            <Canvas HorizontalAlignment="Right" Height="7" Margin="7,2,2,2" SnapsToDevicePixels="true" VerticalAlignment="Bottom" Width="6">
+                                <Path Data="M 1 1.5 L 6 1.5" Stroke="White"/>
+                                <Path Data="M 0 0.5 L 5 0.5" Stroke="{TemplateBinding Foreground}"/>
+                                <Path Data="M 0.5 4 L 6.5 4 L 3.5 7 Z" Fill="White"/>
+                                <Path Data="M -0.5 3 L 5.5 3 L 2.5 6 Z" Fill="{TemplateBinding Foreground}"/>
+                            </Canvas>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter Property="Background" TargetName="Bd" Value="{StaticResource ToolBarButtonHover}"/>
+                            </Trigger>
+                            <Trigger Property="IsKeyboardFocused" Value="true">
+                                <Setter Property="Background" TargetName="Bd" Value="{StaticResource ToolBarButtonHover}"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter Property="Foreground" Value="{StaticResource ToolBarGripper}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Source={x:Static SystemParameters.HighContrast}}" Value="true">
+                    <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.ControlBrushKey}}"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <SolidColorBrush x:Key="ToolBarMenuBorder" Color="#FFB6BDC5"/>
+        <SolidColorBrush x:Key="ToolBarSubMenuBackground" Color="#FFEEF5FD"/>
+        <Style x:Key="ToolBarThumbStyle" TargetType="{x:Type Thumb}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Thumb}">
+                        <Border Background="Transparent" Padding="{TemplateBinding Padding}" SnapsToDevicePixels="True">
+                            <Rectangle>
+                                <Rectangle.Fill>
+                                    <DrawingBrush TileMode="Tile" Viewbox="0,0,4,4" Viewport="0,0,4,4" ViewportUnits="Absolute" ViewboxUnits="Absolute">
+                                        <DrawingBrush.Drawing>
+                                            <DrawingGroup>
+                                                <GeometryDrawing Brush="White" Geometry="M 1 1 L 1 3 L 3 3 L 3 1 z"/>
+                                                <GeometryDrawing Brush="{StaticResource ToolBarGripper}" Geometry="M 0 0 L 0 2 L 2 2 L 2 0 z"/>
+                                            </DrawingGroup>
+                                        </DrawingBrush.Drawing>
+                                    </DrawingBrush>
+                                </Rectangle.Fill>
+                            </Rectangle>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter Property="Cursor" Value="SizeAll"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="ToolBarMainPanelBorderStyle" TargetType="{x:Type Border}">
+            <Setter Property="Margin" Value="0,0,11,0"/>
+            <Setter Property="CornerRadius" Value="3,3,3,3"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Source={x:Static SystemParameters.HighContrast}}" Value="true">
+                    <Setter Property="CornerRadius" Value="0,0,0,0"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="SBToolBar" TargetType="{x:Type ToolBar}">
+            <Setter Property="Background" Value="{StaticResource ToolBarHorizontalBackground}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ToolBar}">
+                        <Grid x:Name="Grid" Margin="3,1,1,1" SnapsToDevicePixels="true">
+                            <Grid x:Name="OverflowGrid" HorizontalAlignment="Right">
+                                <ToggleButton x:Name="OverflowButton" ClickMode="Press" FocusVisualStyle="{x:Null}" IsChecked="{Binding IsOverflowOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" IsEnabled="False" Style="{StaticResource ToolBarHorizontalOverflowButtonStyle}" Visibility="Collapsed"/>
+                                <Popup x:Name="OverflowPopup" AllowsTransparency="true" Focusable="false" IsOpen="{Binding IsOverflowOpen, RelativeSource={RelativeSource TemplatedParent}}" PopupAnimation="{DynamicResource {x:Static SystemParameters.ComboBoxPopupAnimationKey}}" Placement="Bottom" StaysOpen="false">
+                                    <Themes:SystemDropShadowChrome x:Name="Shdw" Color="Transparent">
+                                        <Border x:Name="ToolBarSubMenuBorder" BorderBrush="{StaticResource ToolBarMenuBorder}" BorderThickness="1" Background="{StaticResource ToolBarSubMenuBackground}" RenderOptions.ClearTypeHint="Enabled">
+                                            <ToolBarOverflowPanel x:Name="PART_ToolBarOverflowPanel" KeyboardNavigation.DirectionalNavigation="Cycle" FocusVisualStyle="{x:Null}" Focusable="true" Margin="2" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" KeyboardNavigation.TabNavigation="Cycle" WrapWidth="200"/>
+                                        </Border>
+                                    </Themes:SystemDropShadowChrome>
+                                </Popup>
+                            </Grid>
+                            <Border x:Name="MainPanelBorder" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}" Style="{StaticResource ToolBarMainPanelBorderStyle}">
+                                <DockPanel KeyboardNavigation.TabIndex="1" KeyboardNavigation.TabNavigation="Local">
+                                    <Thumb x:Name="ToolBarThumb" Margin="-3,-1,0,0" Padding="6,5,1,6" Style="{StaticResource ToolBarThumbStyle}" Width="10"/>
+                                    <ContentPresenter x:Name="ToolBarHeader" ContentSource="Header" HorizontalAlignment="Center" Margin="4,0,4,0" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="Center"/>
+                                    <ToolBarPanel x:Name="PART_ToolBarPanel" IsItemsHost="true" Margin="0,1,2,2" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                                </DockPanel>
+                            </Border>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsOverflowOpen" Value="true">
+                                <Setter Property="IsEnabled" TargetName="ToolBarThumb" Value="false"/>
+                            </Trigger>
+                            <Trigger Property="Header" Value="{x:Null}">
+                                <Setter Property="Visibility" TargetName="ToolBarHeader" Value="Collapsed"/>
+                            </Trigger>
+                            <Trigger Property="ToolBarTray.IsLocked" Value="true">
+                                <Setter Property="Visibility" TargetName="ToolBarThumb" Value="Collapsed"/>
+                            </Trigger>
+                            <Trigger Property="HasDropShadow" SourceName="OverflowPopup" Value="true">
+                                <Setter Property="Margin" TargetName="Shdw" Value="0,0,5,5"/>
+                                <Setter Property="SnapsToDevicePixels" TargetName="Shdw" Value="true"/>
+                                <Setter Property="Color" TargetName="Shdw" Value="#71000000"/>
+                            </Trigger>
+                            <Trigger Property="Orientation" Value="Vertical">
+                                <Setter Property="Margin" TargetName="Grid" Value="1,3,1,1"/>
+                                <Setter Property="Style" TargetName="OverflowButton" Value="{StaticResource ToolBarVerticalOverflowButtonStyle}"/>
+                                <Setter Property="Height" TargetName="ToolBarThumb" Value="10"/>
+                                <Setter Property="Width" TargetName="ToolBarThumb" Value="Auto"/>
+                                <Setter Property="Margin" TargetName="ToolBarThumb" Value="-1,-3,0,0"/>
+                                <Setter Property="Padding" TargetName="ToolBarThumb" Value="5,6,6,1"/>
+                                <Setter Property="Margin" TargetName="ToolBarHeader" Value="0,0,0,4"/>
+                                <Setter Property="Margin" TargetName="PART_ToolBarPanel" Value="1,0,2,2"/>
+                                <Setter Property="DockPanel.Dock" TargetName="ToolBarThumb" Value="Top"/>
+                                <Setter Property="DockPanel.Dock" TargetName="ToolBarHeader" Value="Top"/>
+                                <Setter Property="HorizontalAlignment" TargetName="OverflowGrid" Value="Stretch"/>
+                                <Setter Property="VerticalAlignment" TargetName="OverflowGrid" Value="Bottom"/>
+                                <Setter Property="Placement" TargetName="OverflowPopup" Value="Right"/>
+                                <Setter Property="Margin" TargetName="MainPanelBorder" Value="0,0,0,11"/>
+                                <Setter Property="Background" Value="{StaticResource ToolBarVerticalBackground}"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Source={x:Static SystemParameters.HighContrast}}" Value="true">
+                    <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.ControlBrushKey}}"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+    <Window.InputBindings>
+        <KeyBinding Modifiers="Control" Key="S" Command="ApplicationCommands.Save" />
+    </Window.InputBindings>
+    <Window.CommandBindings>
+        <CommandBinding Command="ApplicationCommands.Save"
+                CanExecute="Can_Save_Spirits" Executed="Execute_Save_Spirits" />
+    </Window.CommandBindings>
+    <Grid>
+        <ScrollViewer HorizontalAlignment="Left" Height="550" Margin="10,35,0,0" VerticalAlignment="Top" Width="124">
+            <StackPanel x:Name="SpiritList" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+        </ScrollViewer>
+        <TabControl x:Name="tabControl" HorizontalAlignment="Left" Height="550" Margin="139,35,0,0" VerticalAlignment="Top" Width="915">
+            <TabItem Header="Spirit">
+                <Grid x:Name="Spirit_BG" Background="#FFE5E5E5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="32*"/>
+                        <ColumnDefinition Width="423*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid Background="#70FFFFFF" Margin="10,78,248.6,10.4" Grid.ColumnSpan="2">
+                        <Button x:Name="Randomize_Stats" Content="Randomize Stats" HorizontalAlignment="Left" Margin="232,257,0,0" VerticalAlignment="Top" Width="183" Height="32">
+                            <Button.Background>
+                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                    <GradientStop Color="#FFE7B7F7" Offset="0.908"/>
+                                    <GradientStop Color="#FFEDEDED"/>
+                                </LinearGradientBrush>
+                            </Button.Background>
+                        </Button>
+                    </Grid>
+                    <Grid Background="#70FFFFFF" Margin="602.2,78,13.6,323.4" RenderTransformOrigin="0.5,0.5" Grid.Column="1">
+                        <Grid.RenderTransform>
+                            <TransformGroup>
+                                <ScaleTransform ScaleX="-1"/>
+                                <SkewTransform/>
+                                <RotateTransform/>
+                                <TranslateTransform/>
+                            </TransformGroup>
+                        </Grid.RenderTransform>
+                    </Grid>
+                    <Grid Background="#70FFFFFF" Margin="602.2,348,13.6,9.4" RenderTransformOrigin="0.5,0.5" Grid.Column="1">
+                        <Grid.RenderTransform>
+                            <TransformGroup>
+                                <ScaleTransform ScaleX="-1"/>
+                                <SkewTransform/>
+                                <RotateTransform/>
+                                <TranslateTransform/>
+                            </TransformGroup>
+                        </Grid.RenderTransform>
+                    </Grid>
+                    <TextBlock x:Name="Spirit_InternalID_Label" Text="Spirit ID" HorizontalAlignment="Left" Margin="10,33,0,0" VerticalAlignment="Top" Width="182" Grid.ColumnSpan="2" Height="45"/>
+                    <TextBox Background="#90FFFFFF" x:Name="Spirit_Name" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Height="40" Margin="176.2,33,236.6,0" TextWrapping="Wrap" Text="Spirit Name" VerticalAlignment="Top" Width="433" FontSize="24" Grid.Column="1"/>
+                    <Grid HorizontalAlignment="Center" Height="40" Margin="300.2,124,363.6,0" VerticalAlignment="Top" Width="182" Grid.Column="1">
+                    </Grid>
+                    <Label x:Name="Spirit_Slots_Label" Content="Number of Slots" HorizontalAlignment="Left" Margin="157,156,0,342.4" VerticalAlignment="Center" Grid.Column="1"/>
+                    <xctk:IntegerUpDown x:Name="Spirit_Slots" Value="0" Increment="1" Maximum="3" Minimum="0" HorizontalAlignment="Right" Height="23" Margin="0,157,519.6,342.4" VerticalAlignment="Center" Width="62" Grid.Column="1"/>
+                    <Grid HorizontalAlignment="Center" Height="40" Margin="313,460,373.6,0" VerticalAlignment="Top" Width="159" Grid.Column="1">
+                        <Label x:Name="Spirit_Index_Label" Content="Spirit Index" HorizontalAlignment="Left" Margin="10,8,0,6" VerticalAlignment="Center"/>
+                        <xctk:IntegerUpDown x:Name="Spirit_Index" Value="0" Increment="1" Maximum="2000" Minimum="0" HorizontalAlignment="Right" Height="23" Margin="0,11,10,6" VerticalAlignment="Center" Width="55"/>
+                    </Grid>
+                    <Grid HorizontalAlignment="Center" Height="51" Margin="10,77,259.6,0" VerticalAlignment="Top" Width="640" Grid.ColumnSpan="2">
+                        <ComboBox x:Name="Spirit_Type" HorizontalAlignment="Center" Margin="32,26,488,3" VerticalAlignment="Center" Width="120" SelectedValue="{Binding FilterService.TripLengthFrom, Mode=OneWayToSource}"/>
+                        <ComboBox x:Name="Spirit_Attribute" HorizontalAlignment="Center" Margin="250,26,270,3" VerticalAlignment="Center" Width="120" SelectedValue="{Binding FilterService.TripLengthFrom, Mode=OneWayToSource}"/>
+                        <ComboBox x:Name="Spirit_Rank" HorizontalAlignment="Center" Margin="467,26,53,3" VerticalAlignment="Center" Width="120" SelectedValue="{Binding FilterService.TripLengthFrom, Mode=OneWayToSource}"/>
+                        <Label x:Name="Spirit_Type_Label" Content="Spirit Type" HorizontalAlignment="Left" HorizontalContentAlignment="Center" Margin="32,0,0,0" VerticalAlignment="Top" Width="120"/>
+                        <Label x:Name="Spirit_Attibute_Label" Content="Spirit Attribute" HorizontalAlignment="Left" HorizontalContentAlignment="Center" Margin="250,0,0,0" VerticalAlignment="Top" Width="120"/>
+                        <Label x:Name="Spirit_Rank_Label" Content="Spirit Rank" HorizontalAlignment="Left" HorizontalContentAlignment="Center" Margin="467,0,0,0" VerticalAlignment="Top" Width="120"/>
+                    </Grid>
+                    <Grid HorizontalAlignment="Center" Height="58" Margin="10,129,259.6,0" VerticalAlignment="Top" Width="640" Grid.ColumnSpan="2">
+                        <ComboBox x:Name="Spirit_Ability" HorizontalAlignment="Center" Margin="34,27,486,10" VerticalAlignment="Center" Width="120" SelectedValue="{Binding FilterService.TripLengthFrom, Mode=OneWayToSource}"/>
+                        <ComboBox x:Name="Spirit_SuperAbility" HorizontalAlignment="Center" Margin="469,27,51,10" VerticalAlignment="Center" Width="120" SelectedValue="{Binding FilterService.TripLengthFrom, Mode=OneWayToSource}"/>
+                        <Label x:Name="Spirit_Ability_Label" HorizontalContentAlignment="Center" Content="Spirit Ability" HorizontalAlignment="Left" Margin="34,0,0,0" VerticalAlignment="Top" Width="120"/>
+                        <Label x:Name="Spirit_Ability_Desc" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Margin="0,53,0,-29" VerticalAlignment="Top" Width="187" FontSize="8" Height="34">
+                            <TextBlock x:Name="Spirit_Ability_Desc_Block" TextWrapping="WrapWithOverflow">Description</TextBlock>
+                        </Label>
+                        <Label x:Name="Spirit_SuperAbility_Desc" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Margin="436,53,0,-29" VerticalAlignment="Top" Width="187" FontSize="8" Height="34">
+                            <TextBlock x:Name="Spirit_SuperAbility_Desc_Block" TextWrapping="WrapWithOverflow">Description</TextBlock>
+                        </Label>
+                        <Label x:Name="Spirit_SuperAbility_Label" HorizontalContentAlignment="Center" Content="Spirit Super Ability" HorizontalAlignment="Center" Margin="469,0,51,0" VerticalAlignment="Top" Width="120"/>
+                    </Grid>
+                    <Grid HorizontalAlignment="Center" Height="113" Margin="24.2,399,697.6,0" VerticalAlignment="Top" Width="124" Grid.Column="1">
+                        <ComboBox x:Name="Spirit_Series" HorizontalAlignment="Center" VerticalAlignment="Center" Width="110" SelectedValue="{Binding FilterService.TripLengthFrom, Mode=OneWayToSource}" Margin="7,25,7,67"/>
+                        <ComboBox x:Name="Spirit_Game_ID" HorizontalAlignment="Center" VerticalAlignment="Center" Width="110" SelectedValue="{Binding FilterService.TripLengthFrom, Mode=OneWayToSource}" Margin="7,72,7,21"/>
+                        <Label x:Name="Spirit_Series_Label" Content="Series" HorizontalAlignment="Left" HorizontalContentAlignment="Center" VerticalAlignment="Top" Margin="10,0,0,0" Width="104"/>
+                        <Label x:Name="Spirit_Game_Label" Content="Game ID" HorizontalAlignment="Left" HorizontalContentAlignment="Center" VerticalAlignment="Top" Margin="10,46,0,0" Width="104"/>
+                    </Grid>
+
+                    <Grid HorizontalAlignment="Center" Height="103" Margin="157,409,545.6,0" VerticalAlignment="Top" Width="143" Grid.Column="1">
+                        <CheckBox x:Name="Spirit_OnBoard" Content="On Board" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="27,15,23,68" Width="93" Height="20"/>
+                        <ComboBox x:Name="Spirit_BoardConditions" HorizontalAlignment="Center" VerticalAlignment="Center" Width="110" SelectedValue="{Binding FilterService.TripLengthFrom, Mode=OneWayToSource}" Margin="17,62,16,20" Height="21"/>
+                        <Label x:Name="Spirit_BoardConditions_Label" Content="Appears with" HorizontalAlignment="Left" HorizontalContentAlignment="Center" VerticalAlignment="Top" Margin="17,37,0,0" Width="110"/>
+                    </Grid>
+                    <Image x:Name="Spirit_Series_Image" HorizontalAlignment="Left" Height="40" Margin="37,440,0,0" VerticalAlignment="Top" Width="40" Grid.ColumnSpan="2"/>
+                    <Image x:Name="Spirit_Attr_Image" HorizontalAlignment="Left" Height="40" Margin="128.2,33,0,0" VerticalAlignment="Top" Width="40" Grid.Column="1"/>
+                    <Image x:Name="Spirit_Rank_Image" HorizontalAlignment="Left" Height="33" Margin="266.2,0,0,0" VerticalAlignment="Top" Width="258" Grid.Column="1"/>
+                    <Grid HorizontalAlignment="Center" Height="40" Margin="16,240,711.6,0" VerticalAlignment="Top" Width="182" Grid.ColumnSpan="2">
+                        <Label x:Name="Spirit_Exp_Label" Content="EXP at Max Level" HorizontalAlignment="Left" Margin="0,8,0,6" VerticalAlignment="Center"/>
+                        <xctk:IntegerUpDown x:Name="Spirit_Exp" Value="0" Increment="1" Maximum="429496729" Minimum="0" HorizontalAlignment="Right" Height="23" Margin="0,9,10,8" VerticalAlignment="Center" Width="62"/>
+                    </Grid>
+                    <Grid HorizontalAlignment="Center" Height="40" Margin="16,285,711.6,0" VerticalAlignment="Top" Width="182" Grid.ColumnSpan="2">
+                        <Label x:Name="Spirit_Lvl_Rate_Label" Content="Level Up Rate" HorizontalAlignment="Left" Margin="0,8,0,6" VerticalAlignment="Center"/>
+                        <xctk:DecimalUpDown x:Name="Spirit_Lvl_Rate" Value="1" Increment="0.1" Maximum="3" Minimum="0.01" HorizontalAlignment="Right" Height="23" Margin="0,9,10,8" VerticalAlignment="Center" Width="62"/>
+                    </Grid>
+                    <Grid HorizontalAlignment="Center" Height="40" Margin="176.2,240,487.6,0" VerticalAlignment="Top" Width="182" Grid.Column="1">
+                        <Label x:Name="Spirit_Base_Atk_Label" Content="Base Attack" HorizontalAlignment="Left" Margin="0,8,0,6" VerticalAlignment="Center"/>
+                        <xctk:IntegerUpDown x:Name="Spirit_Base_Atk" Value="0" Increment="1" Maximum="10000" Minimum="0" HorizontalAlignment="Right" Height="23" Margin="0,9,10,8" VerticalAlignment="Center" Width="62"/>
+                    </Grid>
+                    <Grid HorizontalAlignment="Center" Height="40" Margin="404.2,240,259.6,0" VerticalAlignment="Top" Width="182" Grid.Column="1">
+                        <Label x:Name="Spirit_Base_Def_Label" Content="Base Defense" HorizontalAlignment="Left" Margin="0,8,0,6" VerticalAlignment="Center"/>
+                        <xctk:IntegerUpDown x:Name="Spirit_Base_Def" Value="0" Increment="1" Maximum="10000" Minimum="0" HorizontalAlignment="Right" Height="23" Margin="0,9,10,8" VerticalAlignment="Center" Width="62"/>
+                    </Grid>
+                    <Grid HorizontalAlignment="Center" Height="40" Margin="176.2,285,487.6,0" VerticalAlignment="Top" Width="182" Grid.Column="1">
+                        <Label x:Name="Spirit_Max_Atk_Label" Content="Max Attack" HorizontalAlignment="Left" Margin="0,8,0,6" VerticalAlignment="Center"/>
+                        <xctk:IntegerUpDown x:Name="Spirit_Max_Atk" Value="0" Increment="1" Maximum="10000" Minimum="0" HorizontalAlignment="Right" Height="23" Margin="0,9,10,8" VerticalAlignment="Center" Width="62"/>
+                    </Grid>
+                    <Grid HorizontalAlignment="Center" Height="40" Margin="404.2,285,259.6,0" VerticalAlignment="Top" Width="182" Grid.Column="1">
+                        <Label x:Name="Spirit_Max_Def_Label" Content="Max Defense" HorizontalAlignment="Left" Margin="0,8,0,6" VerticalAlignment="Center"/>
+                        <xctk:IntegerUpDown x:Name="Spirit_Max_Def" Value="0" Increment="1" Maximum="10000" Minimum="0" HorizontalAlignment="Right" Height="23" Margin="0,9,10,8" VerticalAlignment="Center" Width="62"/>
+                    </Grid>
+                    <Grid HorizontalAlignment="Center" Height="40" Margin="16,330,711.6,0" VerticalAlignment="Top" Width="182" Grid.ColumnSpan="2">
+                        <Label x:Name="Spirit_Reward_Label" Content="Reward SP" HorizontalAlignment="Left" Margin="0,8,0,6" VerticalAlignment="Center"/>
+                        <xctk:IntegerUpDown x:Name="Spirit_Reward_SP" Value="0" Increment="1" Maximum="10000" Minimum="0" HorizontalAlignment="Right" Height="23" Margin="0,9,10,8" VerticalAlignment="Center" Width="62"/>
+                    </Grid>
+                    <Grid HorizontalAlignment="Center" Height="40" Margin="404,330,259.6,0" VerticalAlignment="Top" Width="182" Grid.Column="1">
+                        <Label x:Name="Spirit_EXP_Label" Content="Reward EXP" HorizontalAlignment="Left" Margin="0,8,0,6" VerticalAlignment="Center"/>
+                        <xctk:IntegerUpDown x:Name="Spirit_Reward_EXP" Value="0" Increment="1" Maximum="10000" Minimum="0" HorizontalAlignment="Right" Height="23" Margin="0,9,10,8" VerticalAlignment="Center" Width="62"/>
+                    </Grid>
+                    <CheckBox x:Name="Spirit_Is_Rematch" Content="Is Rematchable" HorizontalAlignment="Left" Margin="286,424,0,0" VerticalAlignment="Top" Grid.Column="1"/>
+                    <CheckBox x:Name="Spirit_Is_In_WoL" Content="Randomize" HorizontalAlignment="Left" Margin="412,424,0,0" VerticalAlignment="Top" Grid.Column="1"/>
+                    <CheckBox x:Name="Spirit_Hint1" Content="Hint 1" HorizontalAlignment="Left" Margin="515,424,0,0" VerticalAlignment="Top" Grid.Column="1"/>
+                    <CheckBox x:Name="Spirit_Hint2" Content="Hint 2" HorizontalAlignment="Left" Margin="515,450,0,0" VerticalAlignment="Top" Grid.Column="1"/>
+                    <CheckBox x:Name="Spirit_Hint3" Content="Hint 3" HorizontalAlignment="Left" Margin="515,477,0,0" VerticalAlignment="Top" Grid.Column="1"/>
+                    <Label x:Name="Spirit_Params_Label" Content="Spirit Stats" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Margin="30,201,0,0" VerticalAlignment="Top" Width="631" FontSize="18" Grid.ColumnSpan="2"/>
+                    <Label x:Name="Spirit_Unlocks_Label" Content="Unlock Data" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Margin="591.2,78,-0.4,0" VerticalAlignment="Top" Width="255" FontSize="18" Grid.Column="1"/>
+                    <Label x:Name="Spirit_Misc_Label" Content="Miscellaneous" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Margin="30,375,0,0" VerticalAlignment="Top" Width="631" FontSize="18" Grid.ColumnSpan="2"/>
+                    <Grid HorizontalAlignment="Left" Height="412" Margin="602.2,100,-0.4,0" VerticalAlignment="Top" Width="244" Grid.Column="1">
+                        <ComboBox x:Name="Spirit_Evolves_From" HorizontalAlignment="Center" Margin="55,40,69,0" VerticalAlignment="Top" SelectedValue="{Binding FilterService.TripLengthFrom, Mode=OneWayToSource}" Width="120"/>
+                        <Grid HorizontalAlignment="Center" Height="113" Margin="0,0,0,0" VerticalAlignment="Bottom" Width="124">
+                            <ComboBox x:Name="Spirit_SaleType" HorizontalAlignment="Center" VerticalAlignment="Center" Width="110" SelectedValue="{Binding FilterService.TripLengthFrom, Mode=OneWayToSource}" Margin="7,23,7,68"/>
+                            <xctk:IntegerUpDown x:Name="Spirit_Price" Value="0" Increment="1" Maximum="10000" Minimum="0" HorizontalAlignment="Right" Height="23" VerticalAlignment="Center" Width="62" Margin="0,68,7,22"/>
+                            <Label x:Name="Spirit_Price_Label" Content="Cost" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="7,65,0,22"/>
+                            <Label x:Name="Spirit_Sale_Label" Content="Sale Type" HorizontalAlignment="Left" HorizontalContentAlignment="Center" VerticalAlignment="Top" Margin="10,0,0,0" Width="104"/>
+                        </Grid>
+                        <Label x:Name="Spirit_Evolves_From_Label" Content="Evolves From" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="10,14,26,0" VerticalAlignment="Top" Width="208"/>
+                        <Grid HorizontalAlignment="Center" Height="40" Margin="15,254,17,0" VerticalAlignment="Top" Width="212">
+                            <Label x:Name="Spirit_SummonSP_Label" Content="Summon SP" HorizontalAlignment="Left" Margin="21,8,0,8" VerticalAlignment="Center"/>
+                            <xctk:IntegerUpDown x:Name="Spirit_SummonSP" Value="0" Increment="1" Maximum="10000" Minimum="0" HorizontalAlignment="Right" Height="23" Margin="0,9,21,8" VerticalAlignment="Center" Width="62"/>
+                        </Grid>
+                        <TabControl Background="#00000000" x:Name="Spirit_Summon_Cores" HorizontalAlignment="Left" Height="174" Margin="-3,75,0,0" VerticalAlignment="Top" Width="235" BorderBrush="#00ACACAC">
+                            <TabItem Header="Summon 1">
+                                <Grid Background="#70FFFFFF">
+                                    <ComboBox x:Name="Spirit_Core_1_ID" HorizontalAlignment="Left" Margin="58,33,0,0" VerticalAlignment="Top" Width="120"/>
+                                    <Label x:Name="Spirit_Core_1_Label" Content="Spirit" HorizontalAlignment="Left" HorizontalContentAlignment="Center" Margin="0,7,0,0" VerticalAlignment="Top" Width="230"/>
+                                    <Grid HorizontalAlignment="Center" Height="40" Margin="10,79,10.4,0" VerticalAlignment="Top" Width="210">
+                                        <Label x:Name="Spirit_Core_1_Quantity_Label" Content="Core Count" HorizontalAlignment="Left" Margin="21,8,0,8" VerticalAlignment="Center"/>
+                                        <xctk:IntegerUpDown x:Name="Spirit_Core_1_Quantity" Value="0" Increment="1" Maximum="10" Minimum="0" HorizontalAlignment="Right" Height="23" Margin="0,9,21,8" VerticalAlignment="Center" Width="62"/>
+                                    </Grid>
+                                </Grid>
+                            </TabItem>
+                            <TabItem Header="S2">
+                                <Grid Background="#70FFFFFF">
+                                    <ComboBox x:Name="Spirit_Core_2_ID" HorizontalAlignment="Left" Margin="58,33,0,0" VerticalAlignment="Top" SelectedValue="{Binding FilterService.TripLengthFrom, Mode=OneWayToSource}" Width="120"/>
+                                    <Label x:Name="Spirit_Core_2_Label" Content="Spirit" HorizontalAlignment="Left" HorizontalContentAlignment="Center" Margin="0,7,0,0" VerticalAlignment="Top" Width="230"/>
+                                    <Grid HorizontalAlignment="Center" Height="40" Margin="10,79,10.4,0" VerticalAlignment="Top" Width="210">
+                                        <Label x:Name="Spirit_Core_2_Quantity_Label" Content="Core Count" HorizontalAlignment="Left" Margin="21,8,0,8" VerticalAlignment="Center"/>
+                                        <xctk:IntegerUpDown x:Name="Spirit_Core_2_Quantity" Value="0" Increment="1" Maximum="10" Minimum="0" HorizontalAlignment="Right" Height="23" Margin="0,9,21,8" VerticalAlignment="Center" Width="62"/>
+                                    </Grid>
+                                </Grid>
+                            </TabItem>
+                            <TabItem Header="S3">
+                                <Grid Background="#70FFFFFF">
+                                    <ComboBox x:Name="Spirit_Core_3_ID" HorizontalAlignment="Left" Margin="58,33,0,0" VerticalAlignment="Top" SelectedValue="{Binding FilterService.TripLengthFrom, Mode=OneWayToSource}" Width="120"/>
+                                    <Label x:Name="Spirit_Core_3_Label" Content="Spirit" HorizontalAlignment="Left" HorizontalContentAlignment="Center" Margin="0,7,0,0" VerticalAlignment="Top" Width="230"/>
+                                    <Grid HorizontalAlignment="Center" Height="40" Margin="10,79,10.4,0" VerticalAlignment="Top" Width="210">
+                                        <Label x:Name="Spirit_Core_3_Quantity_Label" Content="Core Count" HorizontalAlignment="Left" Margin="21,8,0,8" VerticalAlignment="Center"/>
+                                        <xctk:IntegerUpDown x:Name="Spirit_Core_3_Quantity" Value="0" Increment="1" Maximum="10" Minimum="0" HorizontalAlignment="Right" Height="23" Margin="0,9,21,8" VerticalAlignment="Center" Width="62"/>
+                                    </Grid>
+                                </Grid>
+                            </TabItem>
+                            <TabItem Header="S4">
+                                <Grid Background="#70FFFFFF">
+                                    <ComboBox x:Name="Spirit_Core_4_ID" HorizontalAlignment="Left" Margin="58,33,0,0" VerticalAlignment="Top" SelectedValue="{Binding FilterService.TripLengthFrom, Mode=OneWayToSource}" Width="120"/>
+                                    <Label x:Name="Spirit_Core_4_Label" Content="Spirit" HorizontalAlignment="Left" HorizontalContentAlignment="Center" Margin="0,7,0,0" VerticalAlignment="Top" Width="230"/>
+                                    <Grid HorizontalAlignment="Center" Height="40" Margin="10,79,10.4,0" VerticalAlignment="Top" Width="210">
+                                        <Label x:Name="Spirit_Core_4_Quantity_Label" Content="Core Count" HorizontalAlignment="Left" Margin="21,8,0,8" VerticalAlignment="Center"/>
+                                        <xctk:IntegerUpDown x:Name="Spirit_Core_4_Quantity" Value="0" Increment="1" Maximum="10" Minimum="0" HorizontalAlignment="Right" Height="23" Margin="0,9,21,8" VerticalAlignment="Center" Width="62"/>
+                                    </Grid>
+                                </Grid>
+                            </TabItem>
+                            <TabItem Header="S5">
+                                <Grid Background="#70FFFFFF">
+                                    <ComboBox x:Name="Spirit_Core_5_ID" HorizontalAlignment="Left" Margin="58,33,0,0" VerticalAlignment="Top" SelectedValue="{Binding FilterService.TripLengthFrom, Mode=OneWayToSource}" Width="120"/>
+                                    <Label x:Name="Spirit_Core_5_Label" Content="Spirit" HorizontalAlignment="Left" HorizontalContentAlignment="Center" Margin="0,7,0,0" VerticalAlignment="Top" Width="230"/>
+                                    <Grid HorizontalAlignment="Center" Height="40" Margin="10,79,10.4,0" VerticalAlignment="Top" Width="210">
+                                        <Label x:Name="Spirit_Core_5_Quantity_Label" Content="Core Count" HorizontalAlignment="Left" Margin="21,8,0,8" VerticalAlignment="Center"/>
+                                        <xctk:IntegerUpDown x:Name="Spirit_Core_5_Quantity" Value="0" Increment="1" Maximum="10" Minimum="0" HorizontalAlignment="Right" Height="23" Margin="0,9,21,8" VerticalAlignment="Center" Width="62"/>
+                                    </Grid>
+                                </Grid>
+                            </TabItem>
+                        </TabControl>
+                    </Grid>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Layout">
+                <Grid x:Name="Layout_BG" Background="#FFE5E5E5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="209*"/>
+                        <ColumnDefinition Width="701*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid Background="#70FFFFFF" Margin="13,10,12.6,10.4" Grid.ColumnSpan="2">
+                        <Button x:Name="Spirit_Preview_Open" Content="Load Image" HorizontalAlignment="Left" Margin="275,79,0,0" VerticalAlignment="Top" Width="347" Click="Image_Import_Click" Height="31" FontSize="18">
+                            <Button.Background>
+                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                    <GradientStop Color="#FF6394C2" Offset="1"/>
+                                    <GradientStop Color="White" Offset="0.328"/>
+                                </LinearGradientBrush>
+                            </Button.Background>
+                        </Button>
+                        <Button x:Name="Spirit_Preview_Save_0" Content="Save Spirits__0" HorizontalAlignment="Left" Margin="77,461,0,0" VerticalAlignment="Top" Width="120" Click="Spirits_0_Click"/>
+                        <Button x:Name="Spirit_Preview_Save_1" Content="Save Spirits__1" HorizontalAlignment="Left" Margin="378,461,0,0" VerticalAlignment="Top" Width="120" Click="Spirits_1_Click"/>
+                        <Button x:Name="Spirit_Preview_Save_2" Content="Save Spirits__2" HorizontalAlignment="Left" Margin="714,461,0,0" VerticalAlignment="Top" Width="120" Click="Spirits_2_Click"/>
+                        <Button x:Name="Reset_Main" Content="Reset Main" HorizontalAlignment="Left" Margin="275,259,0,0" VerticalAlignment="Top" Width="213"/>
+                        <Button x:Name="Reset_Board" Content="Reset Board" HorizontalAlignment="Left" Margin="508,259,0,0" VerticalAlignment="Top" Width="114"/>
+                        <Button x:Name="Reset_Spirits_1" Content="Reset Spirits__1" HorizontalAlignment="Left" Margin="508,420,0,0" VerticalAlignment="Top" Width="87"/>
+                        <Grid x:Name="Spirit_Preview_BG" HorizontalAlignment="Left" Height="120" Margin="275,134,0,0" VerticalAlignment="Top" Width="213">
+                            <Grid.Background>
+                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                    <GradientStop Color="Black" Offset="1"/>
+                                    <GradientStop Color="#FF333BCA"/>
+                                </LinearGradientBrush>
+                            </Grid.Background>
+
+                            <Image x:Name="Spirit_Preview_Image" HorizontalAlignment="Center" Height="120" Margin="0,-5,0,5" VerticalAlignment="Center" Width="213" Stretch="None"/>
+                        </Grid>
+                        <Grid x:Name="Spirit_Preview_Head_BG" HorizontalAlignment="Left" Height="120" Margin="508,134,0,0" VerticalAlignment="Top" Width="114">
+                            <Grid.Background>
+                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                    <GradientStop Color="#FFE7E7E7" Offset="1"/>
+                                    <GradientStop Color="#FFF4F4C4"/>
+                                </LinearGradientBrush>
+                            </Grid.Background>
+
+                            <Image x:Name="Spirit_Preview_Image_Head" HorizontalAlignment="Center" Height="120" Margin="0,0,0,0" VerticalAlignment="Center" Width="114" Stretch="None" OpacityMask="Black"/>
+                        </Grid>
+
+                        <Canvas x:Name="Spirit_Preview_Canvas" HorizontalAlignment="Left" Height="120" Margin="275,134,0,0" VerticalAlignment="Top" Width="213" ClipToBounds="True"
+                                MouseLeftButtonDown="CanvasMouseLeftButtonDown"
+                                MouseLeftButtonUp="CanvasMouseLeftButtonUp"
+                                MouseMove="CanvasMouseMove">
+                        </Canvas>
+                        <Canvas x:Name="Spirit_Preview_Head_Canvas" HorizontalAlignment="Left" Height="120" Margin="508,134,0,0" VerticalAlignment="Top" Width="114" ClipToBounds="True"
+                                MouseLeftButtonDown="CanvasMouseLeftButtonDown"
+                                MouseLeftButtonUp="CanvasMouseLeftButtonUp"
+                                MouseMove="CanvasMouseMove">
+                        </Canvas>
+                        <Grid x:Name="Spirit_Preview_0_BG" HorizontalAlignment="Right" Height="120" Margin="0,340,686,0" VerticalAlignment="Top" Width="120">
+                            <Grid.Background>
+                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                    <GradientStop Color="#FFE7E7E7" Offset="1"/>
+                                    <GradientStop Color="#FFAFB9CD"/>
+                                </LinearGradientBrush>
+                            </Grid.Background>
+                        </Grid>
+                        <Grid x:Name="Spirit_Preview_1_BG" HorizontalAlignment="Right" Height="120" Margin="0,341,386,0" VerticalAlignment="Top" Width="120">
+                            <Grid.Background>
+                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                    <GradientStop Color="#FFE7E7E7" Offset="1"/>
+                                    <GradientStop Color="#FFAFB9CD"/>
+                                </LinearGradientBrush>
+                            </Grid.Background>
+                            <Image x:Name="Spirit_Preview_Image_Spr1" HorizontalAlignment="Center" Height="120" Margin="0,0,0,0" VerticalAlignment="Center" Width="120" Stretch="None" OpacityMask="Black"/>
+                        </Grid>
+                        <Grid x:Name="Spirit_Preview_2_BG" HorizontalAlignment="Right" Height="120" Margin="0,340,50,0" VerticalAlignment="Top" Width="120">
+                            <Grid.Background>
+                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                    <GradientStop Color="#FFE7E7E7" Offset="1"/>
+                                    <GradientStop Color="#FFAFB9CD"/>
+                                </LinearGradientBrush>
+                            </Grid.Background>
+                        </Grid>
+                        <Canvas x:Name="Spirit_Preview_Spirits_0_Canvas" HorizontalAlignment="Right" Height="120" Margin="0,341,686,0" VerticalAlignment="Top" Width="120" ClipToBounds="True">
+                            <Image x:Name="Spirit_Preview_0" HorizontalAlignment="Center" Height="120" Margin="0,0,0,0" VerticalAlignment="Center" Width="120" Stretch="None" OpacityMask="Black"/>
+                        </Canvas>
+                        <Canvas x:Name="Spirit_Preview_Spirits_1_Canvas" HorizontalAlignment="Right" Height="120" Margin="0,341,386,0" VerticalAlignment="Top" Width="120" ClipToBounds="True"
+                                MouseLeftButtonDown="CanvasMouseLeftButtonDown"
+                                MouseLeftButtonUp="CanvasMouseLeftButtonUp"
+                                MouseMove="CanvasMouseMove">
+                        </Canvas>
+                        <Canvas x:Name="Spirit_Preview_Spirits_2_Canvas" HorizontalAlignment="Right" Height="120" Margin="0,341,50,0" VerticalAlignment="Top" Width="120" ClipToBounds="True">
+                            <Image x:Name="Spirit_Preview_2" HorizontalAlignment="Center" Height="120" Margin="0,0,0,0" VerticalAlignment="Center" Width="120" Stretch="None" OpacityMask="Black"/>
+                        </Canvas>
+                    </Grid>
+                    <Label x:Name="Layout_Header" Content="Spirit Aesthetics" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="44,6,9.6,455.4" VerticalAlignment="Center" VerticalContentAlignment="Center" FontSize="24" Height="61" Width="856" Grid.ColumnSpan="2"/>
+                    <Label x:Name="Image_Header" Content="Image Positioning" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="53,72,671.6,389.4" VerticalAlignment="Center" VerticalContentAlignment="Center" FontSize="18" Height="61" Width="185" Grid.ColumnSpan="2"/>
+
+                    <ComboBox x:Name="Image_Pos_Type" HorizontalAlignment="Right" Margin="0,162,53.8,0" VerticalAlignment="Top" SelectedValue="{Binding FilterService.TripLengthFrom, Mode=OneWayToSource}" Width="120" SelectedIndex="0">
+                        <ComboBoxItem Content="Spirit Board"/>
+                        <ComboBoxItem Content="Gallery"/>
+                        <ComboBoxItem Content="Unknown"/>
+                        <ComboBoxItem Content="Battle Portrait"/>
+                    </ComboBox>
+                    <Label x:Name="Image_Pos_Type_Label" Content="Position Value Set" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="35,136,53.8,0" VerticalAlignment="Top" Width="120"/>
+
+                    <xctk:DecimalUpDown x:Name="Image_X" Value="1" Increment="1" Maximum="1000" Minimum="-1000" HorizontalAlignment="Right" Height="22" Margin="0,214,64.8,0" VerticalAlignment="Top" Width="88"/>
+                    <Label x:Name="Image_X_Label" Content="X Position" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="54,191,66.8,0" VerticalAlignment="Top" Width="88"/>
+                    <xctk:DecimalUpDown x:Name="Image_Y" Value="1" Increment="1" Maximum="1000" Minimum="-1000" HorizontalAlignment="Right" Height="22" Margin="0,214,654.6,0" VerticalAlignment="Top" Width="88" Grid.ColumnSpan="2"/>
+                    <Label x:Name="Image_Y_Label" Content="Y Position" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="167,191,654.6,0" VerticalAlignment="Top" Width="88" Grid.ColumnSpan="2"/>
+                    <xctk:DecimalUpDown x:Name="Image_Scale" Value="1" Increment="0.1" Maximum="10" Minimum="0.01" HorizontalAlignment="Right" Height="22" Margin="0,162,654.6,0" VerticalAlignment="Top" Width="88" Grid.ColumnSpan="2"/>
+                    <Label x:Name="Image_Scale_X_Label" Content="Scale" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="167,136,654.6,0" VerticalAlignment="Top" Width="88" Grid.ColumnSpan="2"/>
+
+                    <Label x:Name="Image_Pos_Type_Desc" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="24,247,639.6,233.4" VerticalAlignment="Center" VerticalContentAlignment="Center" FontSize="12" Height="42" Width="246" Grid.ColumnSpan="2">
+                        <TextBlock x:Name="Image_Pos_Type_Desc_Block" TextWrapping="WrapWithOverflow">Description</TextBlock>
+                    </Label>
+
+                    <Label x:Name="Effect_Header" Content="Effect Positioning" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="466.2,72,31.6,389.4" VerticalAlignment="Center" VerticalContentAlignment="Center" FontSize="18" Height="61" Width="203" Grid.Column="1"/>
+                    <xctk:IntegerUpDown x:Name="Effect_Count" Value="0" Increment="1" Maximum="15" Minimum="0" HorizontalAlignment="Right" Height="22" Margin="0,163,146.6,0" VerticalAlignment="Top" Width="88" Grid.Column="1"/>
+                    <Label x:Name="Effect_Count_Label" Content="Number of Effects" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="444.2,140,126.6,0" VerticalAlignment="Top" Width="130" Grid.Column="1"/>
+                    <Label x:Name="Effect_X_Label" Content="Effect X Position" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="455.2,190,136.6,0" VerticalAlignment="Top" Width="109" Grid.Column="1"/>
+                    <Label x:Name="Effect_Y_Label" Content="Effect Y Position" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="566.2,190,17.6,0" VerticalAlignment="Top" Width="117" Grid.Column="1"/>
+
+                    <ComboBox x:Name="Effect_Index" HorizontalAlignment="Right" Margin="0,162,31.6,0" VerticalAlignment="Top" SelectedValue="{Binding FilterService.TripLengthFrom, Mode=OneWayToSource}" Width="88" SelectedIndex="0" Grid.Column="1">
+                        <ComboBoxItem Content="1"/>
+                        <ComboBoxItem Content="2"/>
+                        <ComboBoxItem Content="3"/>
+                        <ComboBoxItem Content="4"/>
+                        <ComboBoxItem Content="5"/>
+                        <ComboBoxItem Content="6"/>
+                        <ComboBoxItem Content="7"/>
+                        <ComboBoxItem Content="8"/>
+                        <ComboBoxItem Content="9"/>
+                        <ComboBoxItem Content="10"/>
+                        <ComboBoxItem Content="11"/>
+                        <ComboBoxItem Content="12"/>
+                        <ComboBoxItem Content="13"/>
+                        <ComboBoxItem Content="14"/>
+                        <ComboBoxItem Content="15"/>
+                    </ComboBox>
+                    <Label x:Name="Image_Index_Label" Content="Effect Index" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="566.2,139,14.6,0" VerticalAlignment="Top" Width="120" Grid.Column="1"/>
+
+
+                    <xctk:IntegerUpDown x:Name="Effect_X" Value="0" Increment="1" Maximum="1000" Minimum="-1000" HorizontalAlignment="Right" Height="22" Margin="0,214,146.6,0" VerticalAlignment="Top" Width="88" Grid.Column="1"/>
+                    <xctk:IntegerUpDown x:Name="Effect_Y" Value="0" Increment="1" Maximum="1000" Minimum="-1000" HorizontalAlignment="Right" Height="22" Margin="0,214,31.6,0" VerticalAlignment="Top" Width="88" Grid.Column="1"/>
+                    <xctk:DecimalUpDown x:Name="Chara_1_Scale" Value="1" Increment="0.1" Maximum="10" Minimum="0.01" HorizontalAlignment="Right" Height="22" Margin="0,396,300.6,0" VerticalAlignment="Top" Width="88" Grid.Column="1"/>
+                    <Label x:Name="Spirits_1_Scale_Label" Content="Spirits__1 Scale" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="303.2,370,288.6,0" VerticalAlignment="Top" Width="109" Grid.Column="1"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Battle">
+                <Grid x:Name="Battle_BG" Background="#FFE5E5E5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="9*"/>
+                        <ColumnDefinition Width="90*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid Background="#70FFFFFF" Margin="13,10,12.6,149.4" Grid.ColumnSpan="3"></Grid>
+                    <Grid Background="#70FFFFFF" Margin="13,450,12.6,12.4" RenderTransformOrigin="0.5,0.5" Grid.ColumnSpan="3">
+                        <Grid.RenderTransform>
+                            <TransformGroup>
+                                <ScaleTransform ScaleY="-1"/>
+                                <SkewTransform/>
+                                <RotateTransform/>
+                                <TranslateTransform/>
+                            </TransformGroup>
+                        </Grid.RenderTransform>
+                    </Grid>
+                    <Label x:Name="Battle_Header" Content="Battle Name (With ID)" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="10,6,9.6,455.4" VerticalAlignment="Center" VerticalContentAlignment="Center" FontSize="24" Height="61" Width="890" Grid.ColumnSpan="3"/>
+                    <Label x:Name="Battle_Rules" Content="Battle Rules" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="13,61,12.6,418.4" VerticalAlignment="Center" VerticalContentAlignment="Center" FontSize="18" Height="43" Width="884" Grid.ColumnSpan="3"/>
+                    <ComboBox x:Name="Battle_Type" HorizontalAlignment="Right" Margin="0,130,254.6,0" VerticalAlignment="Top" SelectedValue="{Binding FilterService.TripLengthFrom, Mode=OneWayToSource}" Width="120" Grid.Column="2"/>
+                    <Label x:Name="Battle_Type_Label" Content="Battle Type" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="435.8,104,254.6,0" VerticalAlignment="Top" Width="120" Grid.Column="2"/>
+                    <ComboBox x:Name="Battle_Win_Condition" HorizontalAlignment="Right" Margin="0,130,531.6,0" VerticalAlignment="Top" SelectedValue="{Binding FilterService.TripLengthFrom, Mode=OneWayToSource}" Width="120" Grid.Column="2"/>
+                    <Label x:Name="Battle_Win_Condition_Label" Content="Win Condition" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="158.8,104,531.6,0" VerticalAlignment="Top" Width="120" Grid.Column="2"/>
+                    <xctk:IntegerUpDown x:Name="Battle_Time" Value="0" Increment="1" Maximum="600" Minimum="0" HorizontalAlignment="Right" Height="22" Margin="0,130,681.6,370.4" VerticalAlignment="Center" Width="88" Grid.Column="2"/>
+                    <Label x:Name="Battle_Time_Label" Content="Battle Time" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="40.8,104,681.6,0" VerticalAlignment="Top" Width="88" Grid.Column="2"/>
+                    <xctk:IntegerUpDown x:Name="Battle_Init_Damage" Value="0" Increment="1" Maximum="999" Minimum="0" HorizontalAlignment="Right" Height="22" Margin="0,130,23.6,370.4" VerticalAlignment="Center" Width="88" Grid.Column="2"/>
+                    <Label x:Name="Battle_Init_Damage_Label" Content="Start Damage (P1)" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="685.8,104,12.6,0" VerticalAlignment="Top" Width="112" Grid.Column="2"/>
+                    <xctk:IntegerUpDown x:Name="Battle_Init_HP" Value="0" Increment="1" Maximum="900" Minimum="0" HorizontalAlignment="Right" Height="22" Margin="0,130,135.6,370.4" VerticalAlignment="Center" Width="88" Grid.Column="2"/>
+                    <Label x:Name="Battle_Init_HP_Label" Content="Start HP (P1)" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="586.8,104,135.6,0" VerticalAlignment="Top" Width="88" Grid.Column="2"/>
+                    <xctk:IntegerUpDown x:Name="Battle_Stock" Value="0" Increment="1" Maximum="99" Minimum="0" HorizontalAlignment="Right" Height="22" Margin="0,130,797.6,370.4" VerticalAlignment="Center" Width="88" Grid.ColumnSpan="2" Grid.Column="1"/>
+                    <Label x:Name="Battle_Stock_Label" Content="Stock Count" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="5.8,104,797.6,0" VerticalAlignment="Top" Width="88" Grid.ColumnSpan="2" Grid.Column="1"/>
+                    <xctk:IntegerUpDown x:Name="Battle_Power" Value="0" Increment="1" Maximum="25000" Minimum="0" HorizontalAlignment="Right" Height="22" Margin="0,130,407.6,370.4" VerticalAlignment="Center" Width="88" Grid.Column="2"/>
+                    <Label x:Name="Battle_Power_Label" Content="Battle Power" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="314.8,104,407.6,0" VerticalAlignment="Top" Width="88" Grid.Column="2"/>
+
+                    <Label x:Name="Battle_Stage" Content="Battle Stage" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="13,162,12.6,319.4" VerticalAlignment="Center" VerticalContentAlignment="Center" FontSize="18" Height="41" Width="884" Grid.ColumnSpan="3"/>
+                    <ComboBox x:Name="Battle_Stage_ID" HorizontalAlignment="Right" Margin="0,239,390.6,0" VerticalAlignment="Top" SelectedValue="{Binding FilterService.TripLengthFrom, Mode=OneWayToSource}" Width="120" Grid.Column="2"/>
+                    <Label x:Name="Battle_Stage_ID_Label" Content="Stage" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="299.8,208,390.6,0" VerticalAlignment="Top" Width="120" RenderTransformOrigin="0.497,0.406" Grid.Column="2"/>
+                    <Image x:Name="Stage_Preview" HorizontalAlignment="Left" Height="72" Margin="58.8,21,0,0" VerticalAlignment="Top" Width="87" Grid.ColumnSpan="2" Grid.Column="1"/>
+                    <ComboBox x:Name="Battle_Stage_Type" HorizontalAlignment="Right" Margin="0,239,561.6,0" VerticalAlignment="Top" SelectedValue="{Binding FilterService.TripLengthFrom, Mode=OneWayToSource}" Width="120" Grid.Column="2"/>
+                    <Label x:Name="Battle_Stage_Type_Label" Content="Stage Type" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="128.8,208,561.6,0" VerticalAlignment="Top" Width="120" Grid.Column="2"/>
+                    <ComboBox x:Name="Battle_Stage_Form" HorizontalAlignment="Right" Margin="0,239,734.6,0" VerticalAlignment="Top" SelectedValue="{Binding FilterService.TripLengthFrom, Mode=OneWayToSource}" Width="120" Grid.ColumnSpan="2" Grid.Column="1"/>
+                    <Label x:Name="Battle_Stage_Form_Label" Content="Stage Form" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="36.8,208,734.6,0" VerticalAlignment="Top" Width="120" Grid.ColumnSpan="2" Grid.Column="1"/>
+                    <ComboBox x:Name="Battle_Stage_Attr" HorizontalAlignment="Right" Margin="0,239,214.6,0" VerticalAlignment="Top" SelectedValue="{Binding FilterService.TripLengthFrom, Mode=OneWayToSource}" Width="120" Grid.Column="2"/>
+                    <Label x:Name="Battle_Stage_Attr_Label" Content="Environment Effect" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="475.8,208,214.6,0" VerticalAlignment="Top" Width="120" Grid.Column="2"/>
+                    <ComboBox x:Name="Battle_Floor" HorizontalAlignment="Right" Margin="0,239,53.6,0" VerticalAlignment="Top" SelectedValue="{Binding FilterService.TripLengthFrom, Mode=OneWayToSource}" Width="120" Grid.Column="2"/>
+                    <Label x:Name="Battle_Floor_Label" Content="Floor Position" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="636.8,208,53.6,0" VerticalAlignment="Top" Width="120" Grid.Column="2"/>
+                    <ComboBox x:Name="Battle_BGM" HorizontalAlignment="Right" Margin="0,292,282.6,0" VerticalAlignment="Top" SelectedValue="{Binding FilterService.TripLengthFrom, Mode=OneWayToSource}" Width="120" Grid.Column="2"/>
+                    <Label x:Name="Battle_BGM_Label" Content="Music" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="407.8,266,282.6,0" VerticalAlignment="Top" Width="120" Grid.Column="2"/>
+                    <ComboBox x:Name="Battle_Item_Table" HorizontalAlignment="Right" Margin="0,292,473.6,0" VerticalAlignment="Top" SelectedValue="{Binding FilterService.TripLengthFrom, Mode=OneWayToSource}" Width="120" Grid.Column="2"/>
+                    <Label x:Name="Battle_Item_Table_Label" Content="Item Table" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="216.8,266,473.6,0" VerticalAlignment="Top" Width="120" Grid.Column="2"/>
+                    <ComboBox x:Name="Battle_Item_Level" HorizontalAlignment="Right" Margin="0,292,649.6,0" VerticalAlignment="Top" SelectedValue="{Binding FilterService.TripLengthFrom, Mode=OneWayToSource}" Width="120" Grid.Column="2"/>
+                    <Label x:Name="Battle_Item_Level_Label" Content="Item Frequency" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="40.8,266,649.6,0" VerticalAlignment="Top" Width="120" Grid.Column="2"/>
+
+                    <Label x:Name="Event_Header" Content="Battle Events" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="13,319,12.6,150.4" VerticalAlignment="Center" VerticalContentAlignment="Center" FontSize="18" Height="53" Width="884" Grid.ColumnSpan="3"/>
+                    <TabControl Background="#00000000"  x:Name="Events" HorizontalAlignment="Left" Height="105" Margin="10,347,0,0" VerticalAlignment="Top" Width="890" Grid.ColumnSpan="3">
+                        <TabItem Header="Event 1">
+                            <Grid Background="#70FFFFFF">
+                                <ComboBox x:Name="Event_1_Type" HorizontalAlignment="Center" Margin="10,26,754,0" VerticalAlignment="Top" Width="120"/>
+                                <ComboBox x:Name="Event_1_Label" HorizontalAlignment="Center" Margin="170,26,594,0" VerticalAlignment="Top" Width="120"/>
+                                <xctk:IntegerUpDown x:Name="Event_1_Damage" Value="0" Increment="1" Maximum="600" Minimum="0" HorizontalAlignment="Right" Height="22" Margin="0,26,38,28.8" VerticalAlignment="Center" Width="88"/>
+                                <xctk:IntegerUpDown x:Name="Event_1_Count" Value="0" Increment="1" Maximum="600" Minimum="0" HorizontalAlignment="Right" Height="22" Margin="0,26,177,28.8" VerticalAlignment="Center" Width="88"/>
+                                <xctk:IntegerUpDown x:Name="Event_1_Range_Time" Value="0" Increment="1" Maximum="600" Minimum="-1" HorizontalAlignment="Right" Height="22" Margin="0,26,320,28.8" VerticalAlignment="Center" Width="88"/>
+                                <xctk:IntegerUpDown x:Name="Event_1_Start_Time" Value="0" Increment="1" Maximum="600" Minimum="0" HorizontalAlignment="Right" Height="22" Margin="0,26,460,28.8" VerticalAlignment="Center" Width="88"/>
+                                <Label x:Name="E1TL" Content="Event Type" HorizontalAlignment="Left" HorizontalContentAlignment="Center" Margin="10,0,0,0" VerticalAlignment="Top" Width="120"/>
+                                <Label x:Name="E1LL" Content="Event Parameter" HorizontalAlignment="Left" HorizontalContentAlignment="Center" Margin="170,0,0,0" VerticalAlignment="Top" Width="120"/>
+                                <Label x:Name="E1STL" Content="Event Start Time" HorizontalAlignment="Left" HorizontalContentAlignment="Center" Margin="326,0,0,0" VerticalAlignment="Top" Width="108"/>
+                                <Label x:Name="E1RTL" Content="Event Duration" HorizontalAlignment="Left" HorizontalContentAlignment="Center" Margin="466,0,0,0" VerticalAlignment="Top" Width="108"/>
+                                <Label x:Name="E1CL" Content="Event Count" HorizontalAlignment="Left" HorizontalContentAlignment="Center" Margin="610,0,0,0" VerticalAlignment="Top" Width="108"/>
+                                <Label x:Name="E1DL" Content="Event Start Damage" HorizontalAlignment="Left" HorizontalContentAlignment="Center" Margin="745,0,0,0" VerticalAlignment="Top" Width="114"/>
+                                <Label x:Name="Event_1_Desc" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Margin="0,53,0,-0.2" VerticalAlignment="Top" Width="884" FontSize="10" Height="24">
+                                    <TextBlock x:Name="Event_1_Desc_Block" TextWrapping="WrapWithOverflow">Description</TextBlock>
+                                </Label>
+                            </Grid>
+                        </TabItem>
+                        <TabItem Header="Event 2">
+                            <Grid Background="#70FFFFFF">
+                                <ComboBox x:Name="Event_2_Type" HorizontalAlignment="Center" Margin="10,26,754,0" VerticalAlignment="Top" Width="120"/>
+                                <ComboBox x:Name="Event_2_Label" HorizontalAlignment="Center" Margin="170,26,594,0" VerticalAlignment="Top" Width="120"/>
+                                <xctk:IntegerUpDown x:Name="Event_2_Damage" Value="0" Increment="1" Maximum="600" Minimum="0" HorizontalAlignment="Right" Height="22" Margin="0,26,38,28.8" VerticalAlignment="Center" Width="88"/>
+                                <xctk:IntegerUpDown x:Name="Event_2_Count" Value="0" Increment="1" Maximum="600" Minimum="0" HorizontalAlignment="Right" Height="22" Margin="0,26,177,28.8" VerticalAlignment="Center" Width="88"/>
+                                <xctk:IntegerUpDown x:Name="Event_2_Range_Time" Value="0" Increment="1" Maximum="600" Minimum="-1" HorizontalAlignment="Right" Height="22" Margin="0,26,320,28.8" VerticalAlignment="Center" Width="88"/>
+                                <xctk:IntegerUpDown x:Name="Event_2_Start_Time" Value="0" Increment="1" Maximum="600" Minimum="0" HorizontalAlignment="Right" Height="22" Margin="0,26,460,28.8" VerticalAlignment="Center" Width="88"/>
+                                <Label x:Name="E2TL" Content="Event Type" HorizontalAlignment="Left" HorizontalContentAlignment="Center" Margin="10,0,0,0" VerticalAlignment="Top" Width="120"/>
+                                <Label x:Name="E2LL" Content="Event Parameter" HorizontalAlignment="Left" HorizontalContentAlignment="Center" Margin="170,0,0,0" VerticalAlignment="Top" Width="120"/>
+                                <Label x:Name="E2STL" Content="Event Start Time" HorizontalAlignment="Left" HorizontalContentAlignment="Center" Margin="326,0,0,0" VerticalAlignment="Top" Width="108"/>
+                                <Label x:Name="E2RTL" Content="Event Duration" HorizontalAlignment="Left" HorizontalContentAlignment="Center" Margin="466,0,0,0" VerticalAlignment="Top" Width="108"/>
+                                <Label x:Name="E2CL" Content="Event Count" HorizontalAlignment="Left" HorizontalContentAlignment="Center" Margin="610,0,0,0" VerticalAlignment="Top" Width="108"/>
+                                <Label x:Name="E2DL" Content="Event Start Damage" HorizontalAlignment="Left" HorizontalContentAlignment="Center" Margin="745,0,0,0" VerticalAlignment="Top" Width="114"/>
+                                <Label x:Name="Event_2_Desc" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Margin="0,53,0,-0.2" VerticalAlignment="Top" Width="884" FontSize="10" Height="24">
+                                    <TextBlock x:Name="Event_2_Desc_Block" TextWrapping="WrapWithOverflow">Description</TextBlock>
+                                </Label>
+                            </Grid>
+                        </TabItem>
+                        <TabItem Header="Event 3">
+                            <Grid Background="#70FFFFFF">
+                                <ComboBox x:Name="Event_3_Type" HorizontalAlignment="Center" Margin="10,26,754,0" VerticalAlignment="Top" Width="120"/>
+                                <ComboBox x:Name="Event_3_Label" HorizontalAlignment="Center" Margin="170,26,594,0" VerticalAlignment="Top" Width="120"/>
+                                <xctk:IntegerUpDown x:Name="Event_3_Damage" Value="0" Increment="1" Maximum="600" Minimum="0" HorizontalAlignment="Right" Height="22" Margin="0,26,38,28.8" VerticalAlignment="Center" Width="88"/>
+                                <xctk:IntegerUpDown x:Name="Event_3_Count" Value="0" Increment="1" Maximum="600" Minimum="0" HorizontalAlignment="Right" Height="22" Margin="0,26,177,28.8" VerticalAlignment="Center" Width="88"/>
+                                <xctk:IntegerUpDown x:Name="Event_3_Range_Time" Value="0" Increment="1" Maximum="600" Minimum="-1" HorizontalAlignment="Right" Height="22" Margin="0,26,320,28.8" VerticalAlignment="Center" Width="88"/>
+                                <xctk:IntegerUpDown x:Name="Event_3_Start_Time" Value="0" Increment="1" Maximum="600" Minimum="0" HorizontalAlignment="Right" Height="22" Margin="0,26,460,28.8" VerticalAlignment="Center" Width="88"/>
+                                <Label x:Name="E3TL" Content="Event Type" HorizontalAlignment="Left" HorizontalContentAlignment="Center" Margin="10,0,0,0" VerticalAlignment="Top" Width="120"/>
+                                <Label x:Name="E3LL" Content="Event Parameter" HorizontalAlignment="Left" HorizontalContentAlignment="Center" Margin="170,0,0,0" VerticalAlignment="Top" Width="120"/>
+                                <Label x:Name="E3STL" Content="Event Start Time" HorizontalAlignment="Left" HorizontalContentAlignment="Center" Margin="326,0,0,0" VerticalAlignment="Top" Width="108"/>
+                                <Label x:Name="E3RTL" Content="Event Duration" HorizontalAlignment="Left" HorizontalContentAlignment="Center" Margin="466,0,0,0" VerticalAlignment="Top" Width="108"/>
+                                <Label x:Name="E3CL" Content="Event Count" HorizontalAlignment="Left" HorizontalContentAlignment="Center" Margin="610,0,0,0" VerticalAlignment="Top" Width="108"/>
+                                <Label x:Name="E3DL" Content="Event Start Damage" HorizontalAlignment="Left" HorizontalContentAlignment="Center" Margin="745,0,0,0" VerticalAlignment="Top" Width="114"/>
+                                <Label x:Name="Event_3_Desc" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Margin="0,53,0,-0.2" VerticalAlignment="Top" Width="884" FontSize="10" Height="24">
+                                    <TextBlock x:Name="Event_3_Desc_Block" TextWrapping="WrapWithOverflow">Description</TextBlock>
+                                </Label>
+                            </Grid>
+                        </TabItem>
+                    </TabControl>
+
+                    <ComboBox x:Name="Battle_Recommended" HorizontalAlignment="Right" Margin="0,483,769.6,0" VerticalAlignment="Top" SelectedValue="{Binding FilterService.TripLengthFrom, Mode=OneWayToSource}" Width="120" SelectedIndex="0" Grid.ColumnSpan="2" Grid.Column="1">
+                        <ComboBoxItem Content="1"/>
+                        <ComboBoxItem Content="2"/>
+                        <ComboBoxItem Content="3"/>
+                        <ComboBoxItem Content="4"/>
+                        <ComboBoxItem Content="5"/>
+                        <ComboBoxItem Content="6"/>
+                        <ComboBoxItem Content="7"/>
+                        <ComboBoxItem Content="8"/>
+                        <ComboBoxItem Content="9"/>
+                        <ComboBoxItem Content="10"/>
+                        <ComboBoxItem Content="11"/>
+                        <ComboBoxItem Content="12"/>
+                        <ComboBoxItem Content="13"/>
+                    </ComboBox>
+                    <Label x:Name="Battle_Recommended_Label" Content="R. Skill Index" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="1.8,457,769.6,0" VerticalAlignment="Top" Width="120" Grid.ColumnSpan="2" Grid.Column="1"/>
+                    <ComboBox x:Name="Battle_Recommended_Skill" HorizontalAlignment="Right" Margin="0,483,620.6,0" VerticalAlignment="Top" SelectedValue="{Binding FilterService.TripLengthFrom, Mode=OneWayToSource}" Width="120" SelectedIndex="0" Grid.Column="2"/>
+                    <Label x:Name="Battle_Recommended_Skill_Label" Content="Recommended Skill" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="69.8,457,620.6,0" VerticalAlignment="Top" Width="120" Grid.Column="2"/>
+                    <ComboBox x:Name="Battle_Unrecommended_Skill" HorizontalAlignment="Right" Margin="0,483,171.6,0" VerticalAlignment="Top" SelectedValue="{Binding FilterService.TripLengthFrom, Mode=OneWayToSource}" Width="120" SelectedIndex="0" Grid.Column="2"/>
+                    <Label x:Name="Battle_Unrecommended_Skill_Label" Content="Unrecommended Skill" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="505.8,457,156.6,0" VerticalAlignment="Top" Width="148" Grid.Column="2"/>
+                    <ComboBox x:Name="Battle_Unrecommended" HorizontalAlignment="Right" Margin="0,483,26.6,0" VerticalAlignment="Top" SelectedValue="{Binding FilterService.TripLengthFrom, Mode=OneWayToSource}" Width="120" SelectedIndex="0" Grid.Column="2">
+                        <ComboBoxItem Content="1"/>
+                        <ComboBoxItem Content="2"/>
+                        <ComboBoxItem Content="3"/>
+                        <ComboBoxItem Content="4"/>
+                        <ComboBoxItem Content="5"/>
+                    </ComboBox>
+                    <Label x:Name="Battle_Unrecommended_Label" Content="U. Skill Index" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="663.8,457,26.6,0" VerticalAlignment="Top" Width="120" Grid.Column="2"/>
+                    <Button Background="#70FFFFFF" x:Name="Alt_Battle_Button" Content="Switch to DLC Battle" HorizontalAlignment="Left" Margin="648.8,24,0,0" VerticalAlignment="Top" Width="137" Height="46" Grid.Column="2"/>
+                    <ComboBox x:Name="Battle_Auto_Win_Skill" HorizontalAlignment="Center" Margin="220.8,483,469.6,0" VerticalAlignment="Top" SelectedValue="{Binding FilterService.TripLengthFrom, Mode=OneWayToSource}" Width="120" SelectedIndex="0" Grid.Column="2"/>
+                    <Label x:Name="Battle_Auto_Win_Skill_Label" Content="Auto Win Skill 1" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="220.8,457,469.6,0" VerticalAlignment="Top" Width="120" Grid.Column="2"/>
+                    <ComboBox x:Name="Battle_Auto_Win_Skill_2" HorizontalAlignment="Center" Margin="375.8,483,314.6,0" VerticalAlignment="Top" SelectedValue="{Binding FilterService.TripLengthFrom, Mode=OneWayToSource}" Width="120" SelectedIndex="0" Grid.Column="2"/>
+                    <Label x:Name="Battle_Auto_Win_Skill_2_Label" Content="Auto Win Skill 2" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="375.8,457,314.6,0" VerticalAlignment="Top" Width="120" Grid.Column="2"/>
+                    <CheckBox x:Name="Battle_Hazards" Content="Hazards On" HorizontalAlignment="Left" Margin="577.8,292,0,0" VerticalAlignment="Top" Grid.Column="2"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Fighters">
+                <Grid x:Name="Fighter_BG" Background="#FFE5E5E5">
+                    <TabControl x:Name="Fighter_Tab_Control" SelectionChanged="AddNewFighter" HorizontalAlignment="Left" Height="502" Margin="10,10,0,0" VerticalAlignment="Top" Width="890" ItemsSource="{Binding}">
+                        <TabControl.Resources>
+                            <DataTemplate x:Key="FighterTabHeader" DataType="TabItem">
+                                <DockPanel>
+                                    <Button x:Name="DeleteButton" Click="DeleteFighter" DockPanel.Dock="Right" Height="11" Width="11" Margin="5,0,0,0" Padding="0" CommandParameter="{Binding Name, RelativeSource={RelativeSource AncestorType={x:Type TabItem}}}">
+                                        <Image Source="Icons/delete.png"/>
+                                    </Button>
+                                    <TextBlock Text="{Binding Header, RelativeSource={RelativeSource AncestorType={x:Type TabItem}}}" />
+                                </DockPanel>
+                            </DataTemplate>
+                        </TabControl.Resources>
+                    </TabControl>
+                </Grid>
+            </TabItem>
+            <TabItem Header="DLC Boards" IsEnabled="True">
+                <Grid>
+                    <Grid.Background>
+                        <LinearGradientBrush EndPoint="1,1" StartPoint="0.5,0">
+                            <GradientStop Color="#FF43D694" Offset="0.5"/>
+                            <GradientStop Color="#FF669FB0" Offset="0.8"/>
+                            <GradientStop Color="#FF132652" Offset="1"/>
+                            <GradientStop Color="#FFB9FFBF" Offset="0"/>
+                        </LinearGradientBrush>
+                    </Grid.Background>
+                    <Label x:Name="FP1_Label" Content="Challenger Pack 1" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="28" Width="123"/>
+                    <Image x:Name="FP1_Icon" HorizontalAlignment="Left" Height="28" Margin="133,7,0,0" VerticalAlignment="Top" Width="28" Source="Icons/ui_series_persona.png" MouseLeftButtonDown="Set_Debug_Param_Click"/>
+                    <ListBox x:Name="FP1_Spirits" dd:DragDrop.IsDragSource="True" dd:DragDrop.IsDropTarget="True"
+                    dd:DragDrop.DropHandler="{Binding}" Margin="10,38,741.6,286.4">
+                    </ListBox>
+                    <Button x:Name="FP1_Add" Content="Add" HorizontalAlignment="Left" Margin="10,236,0,0" VerticalAlignment="Top" Width="79"/>
+                    <Button x:Name="FP1_Remove" Content="Remove" HorizontalAlignment="Left" Margin="89,236,0,0" VerticalAlignment="Top" Width="79"/>
+                    <Label x:Name="FP6_Label" Content="Challenger Pack 6" HorizontalAlignment="Left" Margin="10,267,0,0" VerticalAlignment="Top" Height="28" Width="123"/>
+                    <Image x:Name="FP6_Icon" HorizontalAlignment="Left" Height="28" Margin="118,262,0,0" VerticalAlignment="Top" Width="28" Source="Icons/ui_series_arms.png" MouseLeftButtonDown="Set_Debug_Param_Click"/>
+                    <ListBox x:Name="FP6_Spirits" dd:DragDrop.IsDragSource="True" dd:DragDrop.IsDropTarget="True"
+                        dd:DragDrop.DropHandler="{Binding}" Margin="10,295,763.6,29.4"/>
+                    <Button x:Name="FP6_Add" Content="Add" HorizontalAlignment="Left" Margin="10,493,0,0" VerticalAlignment="Top" Width="67"/>
+                    <Button x:Name="FP6_Remove" Content="Remove" HorizontalAlignment="Left" Margin="77,493,0,0" VerticalAlignment="Top" Width="67"/>
+                    <Label x:Name="FP2_Label" Content="Challenger Pack 2" HorizontalAlignment="Left" Margin="192,10,0,0" VerticalAlignment="Top" Height="28" Width="123"/>
+                    <Image x:Name="FP2_Icon" HorizontalAlignment="Left" Height="28" Margin="315,7,0,0" VerticalAlignment="Top" Width="28" Source="Icons/ui_series_dragonquest.png" MouseLeftButtonDown="Set_Debug_Param_Click"/>
+                    <ListBox x:Name="FP2_Spirits" dd:DragDrop.IsDragSource="True" dd:DragDrop.IsDropTarget="True"
+                        dd:DragDrop.DropHandler="{Binding}" Margin="192,38,559.6,286.4"/>
+                    <Button x:Name="FP2_Add" Content="Add" HorizontalAlignment="Left" Margin="192,236,0,0" VerticalAlignment="Top" Width="79"/>
+                    <Button x:Name="FP2_Remove" Content="Remove" HorizontalAlignment="Left" Margin="271,236,0,0" VerticalAlignment="Top" Width="79"/>
+                    <Label x:Name="FP3_Label" Content="Challenger Pack 3" HorizontalAlignment="Left" Margin="376,10,0,0" VerticalAlignment="Top" Height="28" Width="123"/>
+                    <Image x:Name="FP3_Icon" HorizontalAlignment="Left" Height="28" Margin="499,7,0,0" VerticalAlignment="Top" Width="28" Source="Icons/ui_series_banjokazooie.png" MouseLeftButtonDown="Set_Debug_Param_Click"/>
+                    <ListBox x:Name="FP3_Spirits" dd:DragDrop.IsDragSource="True" dd:DragDrop.IsDropTarget="True"
+                        dd:DragDrop.DropHandler="{Binding}" Margin="376,38,375.6,286.4"/>
+                    <Button x:Name="FP3_Add" Content="Add" HorizontalAlignment="Left" Margin="376,236,0,0" VerticalAlignment="Top" Width="79"/>
+                    <Button x:Name="FP3_Remove" Content="Remove" HorizontalAlignment="Left" Margin="455,236,0,0" VerticalAlignment="Top" Width="79"/>
+                    <Label x:Name="FP4_Label" Content="Challenger Pack 4" HorizontalAlignment="Left" Margin="563,10,0,0" VerticalAlignment="Top" Height="28" Width="123"/>
+                    <Image x:Name="FP4_Icon" HorizontalAlignment="Left" Height="28" Margin="686,7,0,0" VerticalAlignment="Top" Width="28" Source="Icons/ui_series_fatalfury.png" MouseLeftButtonDown="Set_Debug_Param_Click"/>
+                    <ListBox x:Name="FP4_Spirits" dd:DragDrop.IsDragSource="True" dd:DragDrop.IsDropTarget="True"
+                        dd:DragDrop.DropHandler="{Binding}" Margin="563,38,188.6,286.4"/>
+                    <Button x:Name="FP4_Add" Content="Add" HorizontalAlignment="Left" Margin="563,236,0,0" VerticalAlignment="Top" Width="79"/>
+                    <Button x:Name="FP4_Remove" Content="Remove" HorizontalAlignment="Left" Margin="642,236,0,0" VerticalAlignment="Top" Width="79"/>
+                    <Label x:Name="FP5_Label" Content="Challenger Pack 5" HorizontalAlignment="Left" Margin="744,10,0,0" VerticalAlignment="Top" Height="28" Width="123"/>
+                    <Image x:Name="FP5_Icon" HorizontalAlignment="Left" Height="28" Margin="867,7,0,0" VerticalAlignment="Top" Width="28" Source="Icons/ui_series_fireemblem.png" MouseLeftButtonDown="Set_Debug_Param_Click"/>
+                    <ListBox x:Name="FP5_Spirits" dd:DragDrop.IsDragSource="True" dd:DragDrop.IsDropTarget="True"
+                        dd:DragDrop.DropHandler="{Binding}" Margin="744,38,7.6,286.4"/>
+                    <Button x:Name="FP5_Add" Content="Add" HorizontalAlignment="Left" Margin="743,236,0,0" VerticalAlignment="Top" Width="79"/>
+                    <Button x:Name="FP5_Remove" Content="Remove" HorizontalAlignment="Left" Margin="823,236,0,0" VerticalAlignment="Top" Width="79"/>
+                    <Label x:Name="FP7_Label" Content="Challenger Pack 7" HorizontalAlignment="Left" Margin="160,267,0,0" VerticalAlignment="Top" Height="28" Width="123"/>
+                    <Image x:Name="FP7_Icon" HorizontalAlignment="Left" Height="28" Margin="268,262,0,0" VerticalAlignment="Top" Width="28" Source="Icons/ui_series_minecraft.png" MouseLeftButtonDown="Set_Debug_Param_Click"/>
+                    <ListBox x:Name="FP7_Spirits" dd:DragDrop.IsDragSource="True" dd:DragDrop.IsDropTarget="True"
+                        dd:DragDrop.DropHandler="{Binding}" Margin="160,295,613.6,29.4"/>
+                    <Button x:Name="FP7_Add" Content="Add" HorizontalAlignment="Left" Margin="160,493,0,0" VerticalAlignment="Top" Width="67"/>
+                    <Button x:Name="FP7_Remove" Content="Remove" HorizontalAlignment="Left" Margin="227,493,0,0" VerticalAlignment="Top" Width="67"/>
+                    <Label x:Name="FP8_Label" Content="Challenger Pack 8" HorizontalAlignment="Left" Margin="313,267,0,0" VerticalAlignment="Top" Height="28" Width="123"/>
+                    <Image x:Name="FP8_Icon" HorizontalAlignment="Left" Height="28" Margin="421,262,0,0" VerticalAlignment="Top" Width="28" Source="Icons/ui_series_finalfantasy.png" MouseLeftButtonDown="Set_Debug_Param_Click"/>
+                    <ListBox x:Name="FP8_Spirits" dd:DragDrop.IsDragSource="True" dd:DragDrop.IsDropTarget="True"
+                        dd:DragDrop.DropHandler="{Binding}" Margin="313,295,460.6,29.4"/>
+                    <Button x:Name="FP8_Add" Content="Add" HorizontalAlignment="Left" Margin="313,493,0,0" VerticalAlignment="Top" Width="67"/>
+                    <Button x:Name="FP8_Remove" Content="Remove" HorizontalAlignment="Left" Margin="380,493,0,0" VerticalAlignment="Top" Width="67"/>
+                    <Label x:Name="FP9_Label" Content="Challenger Pack 9" HorizontalAlignment="Left" Margin="469,267,0,0" VerticalAlignment="Top" Height="28" Width="123"/>
+                    <Image x:Name="FP9_Icon" HorizontalAlignment="Left" Height="28" Margin="577,262,0,0" VerticalAlignment="Top" Width="28" Source="Icons/ui_series_xenoblade.png" MouseLeftButtonDown="Set_Debug_Param_Click"/>
+                    <ListBox x:Name="FP9_Spirits" dd:DragDrop.IsDragSource="True" dd:DragDrop.IsDropTarget="True"
+                        dd:DragDrop.DropHandler="{Binding}" Margin="469,295,304.6,29.4"/>
+                    <Button x:Name="FP9_Add" Content="Add" HorizontalAlignment="Left" Margin="469,493,0,0" VerticalAlignment="Top" Width="67"/>
+                    <Button x:Name="FP9_Remove" Content="Remove" HorizontalAlignment="Left" Margin="536,493,0,0" VerticalAlignment="Top" Width="67"/>
+                    <Label x:Name="FP10_Label" Content="Challenger Pack 10" HorizontalAlignment="Left" Margin="622,267,0,0" VerticalAlignment="Top" Height="28" Width="123"/>
+                    <Image x:Name="FP10_Icon" HorizontalAlignment="Left" Height="28" Margin="730,262,0,0" VerticalAlignment="Top" Width="28" Source="Icons/ui_series_tekken.png" MouseLeftButtonDown="Set_Debug_Param_Click"/>
+                    <ListBox x:Name="FP10_Spirits" dd:DragDrop.IsDragSource="True" dd:DragDrop.IsDropTarget="True"
+                        dd:DragDrop.DropHandler="{Binding}" Margin="622,295,151.6,29.4"/>
+                    <Button x:Name="FP10_Add" Content="Add" HorizontalAlignment="Left" Margin="622,493,0,0" VerticalAlignment="Top" Width="67"/>
+                    <Button x:Name="FP10_Remove" Content="Remove" HorizontalAlignment="Left" Margin="689,493,0,0" VerticalAlignment="Top" Width="67"/>
+                    <Label x:Name="FP11_Label" Content="Challenger Pack 11" HorizontalAlignment="Left" Margin="771,267,0,0" VerticalAlignment="Top" Height="28" Width="123"/>
+                    <Image x:Name="FP11_Icon" HorizontalAlignment="Left" Height="28" Margin="879,262,0,0" VerticalAlignment="Top" Width="28" Source="Icons/ui_series_kingdomhearts.png" MouseLeftButtonDown="Set_Debug_Param_Click"/>
+                    <ListBox x:Name="FP11_Spirits" dd:DragDrop.IsDragSource="True" dd:DragDrop.IsDropTarget="True"
+                         dd:DragDrop.DropHandler="{Binding}" Margin="771,295,2.6,29.4"/>
+                    <Button x:Name="FP11_Add" Content="Add" HorizontalAlignment="Left" Margin="771,493,0,0" VerticalAlignment="Top" Width="67"/>
+                    <Button x:Name="FP11_Remove" Content="Remove" HorizontalAlignment="Left" Margin="838,493,0,0" VerticalAlignment="Top" Width="67"/>
+
+                </Grid>
+            </TabItem>
+            <TabItem Header="Randomizer" IsEnabled="True">
+                <Grid x:Name="Randomizer_BG">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="99*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.Background>
+                        <LinearGradientBrush EndPoint="1,1" StartPoint="0.5,0">
+                            <GradientStop Color="#FFFFB47B" Offset="0.5"/>
+                            <GradientStop Color="#FFA066B0" Offset="0.8"/>
+                            <GradientStop Color="#FF451352" Offset="1"/>
+                            <GradientStop Color="#FFF2B9" Offset="0"/>
+                        </LinearGradientBrush>
+                    </Grid.Background>
+                    <Label x:Name="Randomizer_Header" Content="World of Light Randomizer" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="10,6,9.6,455.4" VerticalAlignment="Center" VerticalContentAlignment="Center" FontSize="24" Height="61" Width="890" Grid.ColumnSpan="2"/>
+                    <Label x:Name="Randomizer_Header_Desc" Content="Poorly set up, but this is never being released." HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="10,67,9.6,425.4" VerticalAlignment="Center" VerticalContentAlignment="Center" FontSize="14" Height="30" Width="890" FontStyle="Italic" Grid.ColumnSpan="2" Background="{x:Null}"/>
+                    <CheckBox x:Name="Rand_Use_Seed" Content="Use Seed" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="339.6,157,476.6,349.4" Width="75" Grid.Column="1"/>
+                    <Label x:Name="Rand_Options_Header" Content="Randomizer Options" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="10,102,9.6,364.4" VerticalAlignment="Center" VerticalContentAlignment="Center" FontSize="18" Height="56" Width="890" Grid.ColumnSpan="2"/>
+                    <xctk:IntegerUpDown x:Name="Rand_Seed" Value="0" Increment="1" Minimum="0" HorizontalAlignment="Right" Height="23" Margin="0,153,365.6,346.4" VerticalAlignment="Center" Width="92" Grid.Column="1"/>
+                    <Button x:Name="Rand_Build" Content="Randomize" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Height="40" VerticalAlignment="Center" Margin="339.6,415,365.6,67.4" Grid.Column="1" Background="White" FontSize="16"/>
+                    <CheckBox x:Name="Rand_Add_Hazard_Key" Content="Add Hazard Key" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="92.6,301,684.6,206.4" Width="114" Grid.Column="1"/>
+                    <ComboBox x:Name="Rand_Type" HorizontalAlignment="Center" VerticalAlignment="Center" Width="186" SelectedValue="{Binding FilterService.TripLengthFrom, Mode=OneWayToSource}" Margin="339.6,231,365.6,270.4" Grid.Column="1" SelectedIndex="0">
+                        <ComboBoxItem Content="Completely Random"/>
+                        <ComboBoxItem Content="Retain Difficulty"/>
+                        <ComboBoxItem Content="Vary Difficulty By 1"/>
+                        <ComboBoxItem Content="Increase Difficulty Only"/>
+                    </ComboBox>
+                    <Label x:Name="Rand_Type_Label" Content="Randomizer Mode" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="339.6,204,365.6,0" VerticalAlignment="Top" Width="186" Grid.Column="1"/>
+                    <Label x:Name="DLC_Label" Content="DLC Toggles" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="593.6,150,27.6,0" VerticalAlignment="Top" Width="270" Grid.Column="1"/>
+                    <CheckBox x:Name="Plant_Owned" Content="" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="593.6,182,257.6,325.4" Width="40" Grid.Column="1"/>
+                    <Image x:Name="Plant" Grid.Column="1" HorizontalAlignment="Left" Height="21" Margin="612.6,178,0,0" VerticalAlignment="Top" Width="21" Source="Icons/Stock/chara_2_packun_00.png"/>
+                    <CheckBox x:Name="Joker_Owned" Content="" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="640.6,182,210.6,325.4" Width="40" Grid.Column="1"/>
+                    <Image x:Name="Joker" Grid.Column="1" HorizontalAlignment="Left" Height="21" Margin="659.6,178,0,0" VerticalAlignment="Top" Width="21" Source="Icons/Stock/chara_2_jack_00.png"/>
+                    <CheckBox x:Name="Hero_Owned" Content="" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="684.6,182,166.6,325.4" Width="40" Grid.Column="1"/>
+                    <Image x:Name="Hero" Grid.Column="1" HorizontalAlignment="Left" Height="21" Margin="703.6,178,0,0" VerticalAlignment="Top" Width="21" Source="Icons/Stock/chara_2_brave_00.png"/>
+                    <CheckBox x:Name="Banjo_Owned" Content="" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="731.6,182,119.6,325.4" Width="40" Grid.Column="1"/>
+                    <Image x:Name="Banjo" Grid.Column="1" HorizontalAlignment="Left" Height="21" Margin="750.6,178,0,0" VerticalAlignment="Top" Width="21" Source="Icons/Stock/chara_2_buddy_00.png"/>
+                    <CheckBox x:Name="Terry_Owned" Content="" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="776.6,182,74.6,325.4" Width="40" Grid.Column="1"/>
+                    <Image x:Name="Terry" Grid.Column="1" HorizontalAlignment="Left" Height="21" Margin="795.6,178,0,0" VerticalAlignment="Top" Width="21" Source="Icons/Stock/chara_2_dolly_00.png"/>
+                    <CheckBox x:Name="Byleth_Owned" Content="" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="823.6,182,27.6,325.4" Width="40" Grid.Column="1"/>
+                    <Image x:Name="Byleth" Grid.Column="1" HorizontalAlignment="Left" Height="21" Margin="842.6,178,0,0" VerticalAlignment="Top" Width="21" Source="Icons/Stock/chara_2_master_00.png"/>
+                    <CheckBox x:Name="MinMin_Owned" Content="" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="593.6,211,257.6,296.4" Width="40" Grid.Column="1"/>
+                    <Image x:Name="MinMin" Grid.Column="1" HorizontalAlignment="Left" Height="21" Margin="612.6,207,0,0" VerticalAlignment="Top" Width="21" Source="Icons/Stock/chara_2_tantan_00.png"/>
+                    <CheckBox x:Name="Steve_Owned" Content="" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="640.6,211,210.6,296.4" Width="40" Grid.Column="1"/>
+                    <Image x:Name="Steve" Grid.Column="1" HorizontalAlignment="Left" Height="21" Margin="659.6,207,0,0" VerticalAlignment="Top" Width="21" Source="Icons/Stock/chara_2_pickel_00.png"/>
+                    <CheckBox x:Name="Sephiroth_Owned" Content="" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="684.6,211,166.6,296.4" Width="40" Grid.Column="1"/>
+                    <Image x:Name="Sephiroth" Grid.Column="1" HorizontalAlignment="Left" Height="21" Margin="703.6,207,0,0" VerticalAlignment="Top" Width="21" Source="Icons/Stock/chara_2_edge_00.png"/>
+                    <CheckBox x:Name="PyraMythra_Owned" Content="" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="731.6,211,119.6,296.4" Width="40" Grid.Column="1"/>
+                    <Image x:Name="PyraMythra" Grid.Column="1" HorizontalAlignment="Left" Height="21" Margin="750.6,207,0,0" VerticalAlignment="Top" Width="21" Source="Icons/Stock/chara_2_element_00.png"/>
+                    <CheckBox x:Name="Kazuya_Owned" Content="" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="776.6,211,74.6,296.4" Width="40" Grid.Column="1"/>
+                    <Image x:Name="Kazuya" Grid.Column="1" HorizontalAlignment="Left" Height="21" Margin="795.6,207,0,0" VerticalAlignment="Top" Width="21" Source="Icons/Stock/chara_2_demon_00.png"/>
+                    <CheckBox x:Name="Sora_Owned" Content="" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="823.6,211,27.6,296.4" Width="40" Grid.Column="1"/>
+                    <Image x:Name="Sora" Grid.Column="1" HorizontalAlignment="Left" Height="21" Margin="842.6,207,0,0" VerticalAlignment="Top" Width="21" Source="Icons/Stock/chara_2_trail_00.png"/>
+                    <CheckBox x:Name="Rand_Replace_Chest" Content="Replace Chests" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="92.6,238,674.6,269.4" Width="124" Grid.Column="1"/>
+                    <CheckBox x:Name="Rand_DifficultFighters" Content="Difficult Fighters" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="664.6,263,112.6,244.4" Width="114" Grid.Column="1"/>
+                    <CheckBox x:Name="Rand_AutoDLC" Content="Disable DLC Unlock" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="664.6,243,98.6,264.4" Width="128" Grid.Column="1"/>
+                    <CheckBox x:Name="Rand_DisableSummons" Content="Disable Summons" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="92.6,170,684.6,337.4" Width="114" Grid.Column="1"/>
+                    <xctk:IntegerUpDown x:Name="Rand_OrbAmount" Value="10" Increment="1" Maximum="50" Minimum="0" HorizontalAlignment="Right" Height="23" Margin="0,333,365.6,166.4" VerticalAlignment="Center" Width="57" Grid.Column="1"/>
+                    <ComboBox x:Name="Rand_RankMin" HorizontalAlignment="Center" VerticalAlignment="Center" Width="186" SelectedValue="{Binding FilterService.TripLengthFrom, Mode=OneWayToSource}" Margin="339.6,283,365.6,218.4" Grid.Column="1" SelectedIndex="0">
+                        <ComboBoxItem Content="All Ranks"/>
+                        <ComboBoxItem Content="Advanced or Higher"/>
+                        <ComboBoxItem Content="Ace or Higher"/>
+                        <ComboBoxItem Content="Legend Only"/>
+                    </ComboBox>
+                    <CheckBox x:Name="Rand_ShuffleBosses" Content="Randomize Bosses" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="92.6,217,666.6,290.4" Width="132" Grid.Column="1"/>
+                    <CheckBox x:Name="Rand_ShuffleMasters" Content="Randomize Masters" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="92.6,194,666.6,313.4" Width="132" Grid.Column="1"/>
+                    <Label x:Name="Rand_Rank_Label" Content="Rank Limit" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="339.6,257,365.6,0" VerticalAlignment="Top" Width="186" Grid.Column="1"/>
+                    <Label x:Name="Rand_Sphere_Label" Content="Fighter Skill Sphere Amount" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="339.6,333,427.6,0" VerticalAlignment="Top" Width="124" Grid.Column="1" Height="23" FontSize="9"/>
+                    <Button x:Name="Rand_Regen" Content="Regenerate Seed" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Height="21" VerticalAlignment="Center" Margin="339.6,178,365.6,323.4" Grid.Column="1" Background="White" FontSize="12"/>
+                    <CheckBox x:Name="Rand_Prioritize_Legend" Content="Prioritize Legend for Chests" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="92.6,259,628.6,248.4" Width="170" Grid.Column="1"/>
+                    <CheckBox x:Name="Rand_Retain_Chest_Items" Content="Retain Chest Items" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="92.6,280,628.6,227.4" Width="170" Grid.Column="1"/>
+                    <CheckBox x:Name="Rand_Prioritize_Support" Content="Prioritize Support for Hazard" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="92,321,0,0" Width="208" Grid.Column="1"/>
+                    <CheckBox x:Name="Rand_Final_Legend" Content="Prioritize Legend for Final Battle" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="92,342,0,0" Width="211" Grid.Column="1"/>
+                    <CheckBox x:Name="Rand_Quiz" Content="Randomize Quiz Answers" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="92,362,0,0" Width="189" Grid.Column="1"/>
+                    <CheckBox x:Name="Rand_Boss_Kill" Content="Randomize Boss Clear [EXPERIMENTAL]" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="92,382,0,0" Width="230" Grid.Column="1"/>
+                    <CheckBox x:Name="Rand_Debug" Content="Remove All Spirits [EXPERIMENTAL]" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="92,402,0,0" Width="230" Grid.Column="1"/>
+                </Grid>
+            </TabItem>
+        </TabControl>
+        <ToolBarTray Background="AliceBlue"  HorizontalAlignment="Left" Height="30" VerticalAlignment="Top" Width="1094" Margin="0,0,0,0">
+            <ToolBar Background="#00FFFFFF" x:Name="toolBar" HorizontalAlignment="Left" Height="30" ToolBarTray.IsLocked="True" VerticalAlignment="Center" Width="734" Margin="10,0,-721.6,0.4" Style="{DynamicResource SBToolBar}">
+                <Button x:Name="Build_Mod" Content="Build" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Height="25" VerticalAlignment="Center" Width="60" Margin="0,3,0,2.6" Click="Spirit_Save_Param_Click"/>
+                <Button x:Name="Debug_Build_Mod" Content="Debug Build" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Height="26" VerticalAlignment="Center" Width="71" Margin="0,0,0,-0.4" Click="Spirit_Save_Debug_Param_Click"/>
+                <Button x:Name="Save_Mod" Content="Save" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Height="25" VerticalAlignment="Center" Width="60" Margin="0,0,0,0" Click="Spirit_Commit_Click"/>
+                <Button x:Name="Add_Mod" Content="Add New" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Height="25" VerticalAlignment="Center" Width="60" Margin="0,0,0,0" Click="AddNewSpirit"/>
+                <Button x:Name="Reset_Mod" Content="Reset" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Height="25" VerticalAlignment="Center" Width="60" Margin="0,0,0,0" Click="Spirit_Revert_Click"/>
+                <Button x:Name="Revert_Mod" Content="Revert" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Height="25" VerticalAlignment="Center" Width="60" Margin="0,0,0,0" Click="Spirit_Default_Click"/>
+                <Button x:Name="Export_Mod" Content="Export" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Height="25" VerticalAlignment="Center" Width="60" Margin="0,0,0,0" Click="Spirit_Export_Click"/>
+                <Button x:Name="Import_Mod" Content="Import" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Height="25" VerticalAlignment="Center" Width="60" Margin="0,0,0,0" Click="Spirit_Import_Click"/>
+                <Button x:Name="Import_WoL_List" Content="WoL Import" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Height="25" VerticalAlignment="Center" Width="79" Margin="0,0,0,0.6" Click="WoLSpirit_Import_Click"/>
+                <Button x:Name="Stats" Content="Stats" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Height="25" VerticalAlignment="Center" Width="60" Margin="0,0.3" Click="Stats_Info_Click"/>
+                <Button x:Name="Info" Content="Info" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Height="25" VerticalAlignment="Center" Width="60" Margin="0,0.3" Click="Open_Info_Click"/>
+            </ToolBar>
+        </ToolBarTray>
+    </Grid>
+</Window>
